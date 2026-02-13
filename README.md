@@ -1,1 +1,0 @@
-# Cinema-Management-System
