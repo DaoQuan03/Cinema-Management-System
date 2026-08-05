@@ -1,0 +1,176 @@
+/* ============================================================
+   BOOKING.CSS — Payment / Checkout Page
+   ============================================================ */
+
+/* ── Steps bar ─────────────────────────────────────────────── */
+.steps-bar { background: var(--dark2); border-bottom: 1px solid rgba(232,232,240,.06); padding: 20px 60px; }
+
+.steps { display: flex; align-items: center; max-width: 600px; margin: 0 auto; }
+
+.step { display: flex; align-items: center; gap: 10px; flex: 1; }
+
+.step__num {
+  width: 32px; height: 32px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 700; flex-shrink: 0;
+  background: var(--dark3); color: var(--muted);
+  border: 2px solid rgba(232,232,240,.1); transition: all .3s;
+}
+
+.step--done   .step__num { background: var(--green); color: var(--dark); border-color: var(--green); }
+.step--active .step__num { background: var(--gold);  color: var(--dark); border-color: var(--gold);  }
+
+.step__label { font-size: 13px; font-weight: 500; color: var(--muted); }
+.step--active .step__label { color: var(--text); }
+.step--done   .step__label { color: var(--green); }
+
+.step-connector { flex: 1; height: 2px; background: rgba(232,232,240,.1); margin: 0 6px; }
+.step-connector--done { background: var(--green); }
+
+/* ── Page layout ───────────────────────────────────────────── */
+.booking-layout {
+  display: grid; grid-template-columns: 1fr 380px;
+  gap: 32px; padding: 40px 60px 60px;
+  max-width: 1200px; margin: 0 auto;
+}
+
+/* ── Section cards ─────────────────────────────────────────── */
+.section-card {
+  background: var(--dark2); border-radius: 16px;
+  border: 1px solid rgba(232,232,240,.07);
+  padding: 28px; margin-bottom: 22px;
+}
+
+.section-card__title {
+  font-family: 'Playfair Display', serif;
+  font-size: 20px; font-weight: 700;
+  margin-bottom: 20px;
+  display: flex; align-items: center; gap: 10px;
+}
+
+.section-num {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: rgba(232,184,109,.12); border: 1px solid rgba(232,184,109,.3);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 700; color: var(--gold); flex-shrink: 0;
+}
+
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+/* ── Payment methods ───────────────────────────────────────── */
+.payment-methods { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; }
+
+.payment-method {
+  background: var(--dark3); border: 2px solid rgba(232,232,240,.08);
+  border-radius: 12px; padding: 16px;
+  cursor: pointer; text-align: center; transition: all .2s;
+}
+.payment-method:hover    { border-color: rgba(232,184,109,.3); }
+.payment-method.selected { border-color: var(--gold); background: rgba(232,184,109,.08); }
+.payment-method__icon { font-size: 26px; margin-bottom: 6px; }
+.payment-method__name { font-size: 13px; font-weight: 600; }
+.payment-method__desc { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+/* Card form */
+.card-form { margin-top: 18px; display: none; }
+.card-form.show { display: block; }
+.card-input-wrap { position: relative; }
+.card-flag { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); font-size: 20px; }
+
+/* Other payment info box */
+.payment-info-box {
+  display: none; margin-top: 16px;
+  background: var(--dark3); border-radius: 10px;
+  padding: 16px; font-size: 14px; color: var(--muted); line-height: 1.7;
+}
+
+/* Promo */
+.promo-row { display: flex; gap: 10px; }
+.btn-apply { background: var(--gold); color: var(--dark); border: none; padding: 11px 20px; border-radius: 8px; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 700; cursor: pointer; }
+.btn-apply:hover { background: var(--gold-light); }
+.promo-msg { font-size: 13px; margin-top: 10px; }
+
+/* ── Order summary card ────────────────────────────────────── */
+.order-card {
+  background: var(--dark2); border-radius: 16px;
+  border: 1px solid rgba(232,232,240,.07);
+  overflow: hidden; position: sticky; top: 80px;
+}
+.order-card__header { padding: 20px 24px; border-bottom: 1px solid rgba(232,232,240,.06); }
+.order-card__title  { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; }
+.order-card__body   { padding: 24px; }
+
+.movie-summary { display: flex; gap: 14px; margin-bottom: 18px; }
+.movie-thumb   { width: 58px; height: 86px; border-radius: 8px; overflow: hidden; flex-shrink: 0; }
+.movie-thumb img { width: 100%; height: 100%; object-fit: cover; }
+.movie-summary__title { font-family: 'Playfair Display', serif; font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+.movie-summary__meta  { font-size: 13px; color: var(--muted); line-height: 1.7; }
+
+.order-row { display: flex; justify-content: space-between; font-size: 14px; padding: 5px 0; }
+.order-row .label { color: var(--muted); }
+.order-row--total { font-size: 18px; font-weight: 700; color: var(--gold); padding-top: 12px; margin-top: 8px; border-top: 1px solid rgba(232,232,240,.07); }
+.order-row--discount { color: var(--green); }
+
+.seat-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.seat-tag { background: rgba(232,184,109,.1); border: 1px solid rgba(232,184,109,.2); border-radius: 6px; padding: 3px 10px; font-size: 12px; color: var(--gold); font-weight: 600; }
+
+.pay-btn {
+  width: 100%; background: var(--gold); color: var(--dark);
+  border: none; padding: 16px; border-radius: 12px;
+  font-family: 'DM Sans', sans-serif; font-size: 17px; font-weight: 700;
+  cursor: pointer; margin-top: 18px; transition: all .25s;
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+}
+.pay-btn:hover { background: var(--gold-light); transform: translateY(-2px); box-shadow: 0 10px 30px rgba(232,184,109,.3); }
+.terms-note { font-size: 12px; color: var(--muted); text-align: center; margin-top: 12px; line-height: 1.6; }
+.terms-note a { color: var(--gold); }
+
+/* ── Loading overlay ───────────────────────────────────────── */
+.loading-overlay {
+  display: none; position: fixed; inset: 0;
+  background: rgba(10,10,15,.92); z-index: 250;
+  flex-direction: column; align-items: center; justify-content: center; gap: 20px;
+}
+.loading-overlay.show { display: flex; }
+.spinner { width: 60px; height: 60px; border: 4px solid rgba(232,184,109,.2); border-top-color: var(--gold); border-radius: 50%; animation: spin .8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading-text { font-size: 16px; color: var(--muted); }
+
+/* ── Success overlay ───────────────────────────────────────── */
+.success-overlay {
+  display: none; position: fixed; inset: 0;
+  background: rgba(10,10,15,.97); z-index: 300;
+  flex-direction: column; align-items: center; justify-content: center;
+  text-align: center; padding: 20px;
+}
+.success-overlay.show { display: flex; }
+.success-overlay__icon { font-size: 80px; margin-bottom: 24px; animation: bounceIn .6s ease; }
+@keyframes bounceIn { 0%{transform:scale(0)} 60%{transform:scale(1.2)} 100%{transform:scale(1)} }
+.success-overlay__title { font-family: 'Playfair Display', serif; font-size: 42px; font-weight: 900; color: var(--gold); margin-bottom: 12px; }
+.success-overlay__sub   { font-size: 17px; color: var(--muted); margin-bottom: 32px; }
+
+.ticket-preview {
+  background: var(--dark2); border-radius: 20px; padding: 32px;
+  border: 2px dashed rgba(232,184,109,.3);
+  max-width: 400px; width: 100%; margin: 0 auto 32px;
+}
+.qr-box {
+  width: 130px; height: 130px; background: #fff; border-radius: 12px;
+  margin: 0 auto 14px;
+  display: flex; align-items: center; justify-content: center; font-size: 75px;
+}
+.ticket-id   { font-family: 'Playfair Display', serif; font-size: 22px; color: var(--gold); font-weight: 700; margin-bottom: 8px; letter-spacing: 3px; }
+.ticket-info { font-size: 14px; line-height: 1.8; color: var(--muted); }
+
+.btn-download { background: var(--gold); color: var(--dark); border: none; padding: 13px 32px; border-radius: 10px; font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 700; cursor: pointer; }
+.btn-back-home { border: 2px solid rgba(232,232,240,.2); color: var(--text); padding: 13px 32px; border-radius: 10px; font-family: 'DM Sans', sans-serif; font-size: 15px; cursor: pointer; background: transparent; transition: all .2s; }
+.btn-back-home:hover { border-color: var(--gold); color: var(--gold); }
+
+/* ── Responsive ────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .steps-bar     { padding: 16px 20px; }
+  .booking-layout { grid-template-columns: 1fr; padding: 24px 20px 40px; }
+  .order-card    { position: static; }
+  .payment-methods { grid-template-columns: 1fr 1fr; }
+  .form-grid     { grid-template-columns: 1fr; }
+}

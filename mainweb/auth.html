@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Đăng Nhập / Đăng Ký – CineVerse</title>
+  <link rel="stylesheet" href="style/base.css">
+  <link rel="stylesheet" href="style/auth-profile.css">
+</head>
+<body>
+
+  <div class="auth-layout">
+
+    <!-- LEFT PANEL -->
+    <div class="auth-left">
+      <div class="auth-left__bg" id="authBg"></div>
+      <div class="auth-left__content">
+        <a href="index.html" class="nav__logo" style="display:block;margin-bottom:36px">Cine<span style="color:var(--text)">Verse</span></a>
+        <h2 class="auth-left__headline">Chào Mừng <span>Trở Lại!</span></h2>
+        <p class="auth-left__desc">Đăng nhập để tiếp tục trải nghiệm đặt vé xem phim dễ dàng và nhanh chóng.</p>
+        <div class="auth-features">
+          <div class="auth-feature">Lưu lịch sử đặt vé và vé điện tử</div>
+          <div class="auth-feature">Nhận ưu đãi độc quyền cho thành viên</div>
+          <div class="auth-feature">Đặt ghế yêu thích nhanh hơn</div>
+          <div class="auth-feature">Tích điểm và đổi vé miễn phí</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT PANEL -->
+    <div class="auth-right">
+      <div class="auth-box">
+
+        <!-- Mode tabs -->
+        <div class="auth-tabs">
+          <div class="auth-tab active" id="loginTab"    onclick="switchAuthMode('login')">Đăng Nhập</div>
+          <div class="auth-tab"        id="registerTab" onclick="switchAuthMode('register')">Đăng Ký</div>
+        </div>
+
+        <!-- LOGIN FORM -->
+        <div id="loginForm">
+          <h2 class="auth-title">Đăng Nhập</h2>
+          <p class="auth-sub">Chào mừng bạn trở lại CineVerse!</p>
+
+          <div class="form-group">
+            <label class="form-label" for="loginEmail">Email</label>
+            <input class="form-input" id="loginEmail" type="email" placeholder="email@example.com">
+            <div class="field-error" id="loginEmailErr">Email không hợp lệ</div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="loginPw">Mật Khẩu</label>
+            <div class="pw-wrap">
+              <input class="form-input" id="loginPw" type="password" placeholder="••••••••">
+              <button class="pw-toggle" onclick="togglePassword('loginPw',this)" type="button">👁</button>
+            </div>
+            <div class="field-error" id="loginPwErr">Mật khẩu không đúng</div>
+          </div>
+
+          <div class="form-row-between">
+            <label><input type="checkbox"> Ghi nhớ đăng nhập</label>
+            <a href="#" class="link-gold">Quên mật khẩu?</a>
+          </div>
+
+          <button class="btn btn--primary btn--full btn--lg" onclick="doLogin()">Đăng Nhập</button>
+
+          <div class="divider-or">Hoặc đăng nhập với</div>
+          <div class="social-grid">
+            <div class="social-btn" onclick="socialLogin('Google')">Google</div>
+            <div class="social-btn" onclick="socialLogin('Facebook')">Facebook</div>
+          </div>
+        </div>
+
+        <!-- REGISTER FORM -->
+        <div id="registerForm" style="display:none">
+          <h2 class="auth-title">Đăng Ký</h2>
+          <p class="auth-sub">Tạo tài khoản CineVerse miễn phí!</p>
+
+          <div style="margin-bottom:16px">
+            <div class="form-label">Loại Tài Khoản</div>
+            <div class="role-select">
+              <div class="role-btn selected" onclick="selectRole(this,'user')">
+                <span class="role-btn__icon"></span>User
+              </div>
+              <div class="role-btn" onclick="selectRole(this,'staff')">
+                <span class="role-btn__icon"></span>Nhân viên
+              </div>
+              <div class="role-btn" onclick="selectRole(this,'admin')">
+                <span class="role-btn__icon"></span>Admin
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="regName">Họ Và Tên</label>
+            <input class="form-input" id="regName" type="text" placeholder="Nguyễn Văn An">
+            <div class="field-error" id="regNameErr">Vui lòng nhập họ tên</div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="regEmail">Email</label>
+            <input class="form-input" id="regEmail" type="email" placeholder="email@example.com">
+            <div class="field-error" id="regEmailErr">Email không hợp lệ</div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="regPhone">Số Điện Thoại</label>
+            <input class="form-input" id="regPhone" type="tel" placeholder="0901 234 567">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="regPw">Mật Khẩu</label>
+            <div class="pw-wrap">
+              <input class="form-input" id="regPw" type="password" placeholder="Tối thiểu 8 ký tự">
+              <button class="pw-toggle" onclick="togglePassword('regPw',this)" type="button">👁</button>
+            </div>
+            <div class="field-error" id="regPwErr">Mật khẩu tối thiểu 8 ký tự</div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="regPwConfirm">Xác Nhận Mật Khẩu</label>
+            <input class="form-input" id="regPwConfirm" type="password" placeholder="Nhập lại mật khẩu">
+            <div class="field-error" id="regPwConfirmErr">Mật khẩu không khớp</div>
+          </div>
+          <div class="form-row-between" style="margin-bottom:20px">
+            <label><input type="checkbox" id="agreeTerms"> Tôi đồng ý với <a href="#" class="link-gold">điều khoản sử dụng</a></label>
+          </div>
+
+          <button class="btn btn--primary btn--full btn--lg" onclick="doRegister()">Tạo Tài Khoản</button>
+        </div>
+
+        <!-- Switch mode -->
+        <div class="switch-mode" id="switchMode">
+          Chưa có tài khoản? <span class="switch-link" onclick="switchAuthMode('register')">Đăng ký ngay</span>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Toast notification (injected by shared.js) -->
+
+  <script src="script/shared.js"></script>
+  <script src="script/auth.js"></script>
+</body>
+</html>

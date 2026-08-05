@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chi Tiết Phim – CineVerse</title>
+  <link rel="stylesheet" href="style/base.css">
+  <link rel="stylesheet" href="style/movie-detail.css">
+</head>
+<body>
+
+  <!-- NAVIGATION -->
+  <nav class="nav">
+    <a href="index.html" class="nav__logo">Cine<span>Verse</span></a>
+    <ul class="nav__links">
+      <li><a href="movies.html">← Danh Sách Phim</a></li>
+    </ul>
+    <div class="nav__actions">
+      <a href="auth.html"               class="btn btn--outline">Đăng Nhập</a>
+      <a href="auth.html?mode=register" class="btn btn--primary">Đăng Ký</a>
+    </div>
+  </nav>
+
+  <!-- PAGE-LEVEL NOTIFICATION -->
+  <div class="notif-popup" id="notifPopup"></div>
+
+  <!-- MOVIE HERO BACKDROP -->
+  <div class="movie-hero">
+    <div class="hero-backdrop" id="heroBg"></div>
+    <div class="hero-overlay"></div>
+    <div class="hero-inner">
+      <div class="movie-poster-main">
+        <img id="mainPoster" src="" alt="Movie Poster">
+      </div>
+      <div class="movie-main-info">
+        <div class="breadcrumb">
+          <a href="index.html">Trang chủ</a><span>›</span>
+          <a href="movies.html">Phim</a><span>›</span>
+          <span id="breadcrumbTitle"></span>
+        </div>
+        <h1 class="movie-main-title" id="movieTitle"></h1>
+        <div class="movie-tags" id="movieTags"></div>
+        <div class="rating-row">
+          <span class="imdb-badge" id="imdbBadge"></span>
+          <span class="star-display" id="movieStars"></span>
+          <span class="vote-count"   id="voteCount"></span>
+        </div>
+        <div class="info-row" id="infoRow"></div>
+        <div class="hero-cta">
+          <button class="btn btn--hero"  onclick="openSeatModal()"> Chọn Ghế &amp; Đặt Vé</button>
+          <button class="btn btn--ghost" onclick="showNotifPopup('Trailer đang tải...','warning')">▶ Xem Trailer</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTENT GRID -->
+  <div class="content-grid">
+
+    <!-- LEFT: Info -->
+    <div>
+      <div style="margin-bottom:32px">
+        <div class="section-title--sm">Nội Dung Phim</div>
+        <p id="movieDesc" style="font-size:15px;color:var(--muted);line-height:1.8"></p>
+      </div>
+
+      <div style="margin-bottom:32px">
+        <div class="section-title--sm">Diễn Viên</div>
+        <div class="cast-row" id="castRow"></div>
+      </div>
+
+      <!-- REVIEWS -->
+      <div>
+        <div class="section-title--sm">Đánh Giá &amp; Bình Luận</div>
+        <div class="review-form">
+          <div style="font-size:14px;font-weight:600;margin-bottom:10px">Viết đánh giá của bạn:</div>
+          <div class="star-input" id="starInput">
+            <span onclick="setRating(1)">★</span>
+            <span onclick="setRating(2)">★</span>
+            <span onclick="setRating(3)">★</span>
+            <span onclick="setRating(4)">★</span>
+            <span onclick="setRating(5)">★</span>
+          </div>
+          <textarea class="review-textarea" id="reviewText" rows="3" placeholder="Chia sẻ cảm nhận của bạn..."></textarea>
+          <button class="btn btn--primary" style="margin-top:10px" onclick="submitReview()">Gửi Đánh Giá</button>
+        </div>
+        <div id="reviewsList"></div>
+      </div>
+    </div>
+
+    <!-- RIGHT: Booking sidebar -->
+    <div>
+      <div class="booking-card">
+        <div class="booking-card__header">
+          <div class="booking-card__title">Đặt Vé</div>
+          <div class="booking-card__sub">Chọn suất chiếu phù hợp</div>
+        </div>
+        <div class="booking-card__body">
+          <div class="form-group">
+            <label class="form-label">Chọn Ngày</label>
+            <select class="form-select" id="dateSelect" onchange="updateShowtimes()">
+              <option value="2025-03-10">Thứ 2, 10/03</option>
+              <option value="2025-03-11">Thứ 3, 11/03</option>
+              <option value="2025-03-12">Thứ 4, 12/03 -30%</option>
+              <option value="2025-03-13">Thứ 5, 13/03</option>
+              <option value="2025-03-14">Thứ 6, 14/03</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Chọn Suất Chiếu</label>
+            <div class="showtime-grid" id="showtimeGrid"></div>
+          </div>
+          <button class="btn btn--primary btn--full btn--lg" id="bookNowBtn" disabled onclick="openSeatModal()">
+             Chọn Ghế Ngay
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- SEAT SELECTION MODAL -->
+  <div class="modal-overlay" id="seatModal">
+    <div class="modal">
+      <div class="modal__header">
+        <div>
+          <div class="modal__title">Chọn Ghế Ngồi</div>
+          <div class="modal__sub" id="modalInfo"></div>
+        </div>
+        <button class="modal__close" onclick="closeSeatModal()">✕</button>
+      </div>
+      <div class="modal__body">
+
+        <!-- Realtime badge -->
+        <div class="realtime-badge">
+          <div class="realtime-dot"></div>
+          Real-time — Đang xem cùng <strong id="viewerCount" style="margin:0 4px">3</strong> người khác
+        </div>
+
+        <!-- Screen -->
+        <div class="screen-wrap">
+          <div class="screen-bar"></div>
+          <div class="screen-label">MÀN HÌNH</div>
+        </div>
+
+        <!-- Legend -->
+        <div class="seat-legend">
+          <div class="legend-item">
+            <div class="legend-swatch" style="background:#2A3A5A;border:1px solid #3A4A6A"></div>Standard (100K)
+          </div>
+          <div class="legend-item">
+            <div class="legend-swatch" style="background:#3A2A10;border:1px solid #5A4020"></div>VIP (150K)
+          </div>
+          <div class="legend-item">
+            <div class="legend-swatch" style="background:#3A1020;border:1px solid #5A2030"></div>Sweetbox (200K)
+          </div>
+          <div class="legend-item">
+            <div class="legend-swatch" style="background:#1A1A2A;border:1px solid #2A2A3A;opacity:.5"></div>Đã Đặt
+          </div>
+          <div class="legend-item">
+            <div class="legend-swatch" style="background:#2A1A1A;border:1px solid #3A2A2A"></div>Đang Chọn
+          </div>
+        </div>
+
+        <!-- Seat grid (built by JS) -->
+        <div class="seat-grid" id="seatGrid"></div>
+
+        <!-- Order summary -->
+        <div class="order-summary">
+          <div class="order-row">
+            <span>Ghế đã chọn:</span>
+            <span id="selectedSeatsDisplay" style="font-size:13px;color:var(--muted)">Chưa chọn</span>
+          </div>
+          <div class="order-row" id="standardRow" style="display:none">
+            <span>Standard × <span id="stdCount">0</span></span>
+            <span id="stdPrice">0đ</span>
+          </div>
+          <div class="order-row" id="vipRow" style="display:none">
+            <span>VIP × <span id="vipCount">0</span></span>
+            <span id="vipPrice">0đ</span>
+          </div>
+          <div class="order-row" id="sweetRow" style="display:none">
+            <span>Sweetbox × <span id="sweetCount">0</span></span>
+            <span id="sweetPrice">0đ</span>
+          </div>
+          <div class="order-row order-row--total">
+            <span>Tổng Cộng:</span>
+            <span id="totalPrice">0đ</span>
+          </div>
+        </div>
+
+        <button class="btn btn--primary btn--full btn--lg" id="confirmBtn" disabled onclick="proceedToBooking()">
+          Xác Nhận &amp; Thanh Toán →
+        </button>
+
+      </div>
+    </div>
+  </div>
+
+  <script src="script/shared.js"></script>
+  <script src="script/movie-detail.js"></script>
+</body>
+</html>

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Danh Sách Phim – CineVerse</title>
+  <link rel="stylesheet" href="style/base.css">
+  <link rel="stylesheet" href="style/movies.css">
+</head>
+<body>
+
+  <!-- NAVIGATION -->
+  <nav class="nav">
+    <a href="index.html" class="nav__logo">Cine<span>Verse</span></a>
+    <ul class="nav__links">
+      <li><a href="movies.html" class="active">Phim</a></li>
+      <li><a href="#">Lịch Chiếu</a></li>
+      <li><a href="#">Rạp</a></li>
+      <li><a href="index.html#promo">Ưu Đãi</a></li>
+    </ul>
+    <div class="nav__actions">
+      <a href="auth.html"               class="btn btn--outline">Đăng Nhập</a>
+      <a href="auth.html?mode=register" class="btn btn--primary">Đăng Ký</a>
+    </div>
+  </nav>
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <div class="breadcrumb">
+      <a href="index.html">Trang chủ</a>
+      <span>›</span>
+      <span>Danh sách phim</span>
+    </div>
+    <h1 class="page-header__title" id="pageTitle">Phim Đang Chiếu</h1>
+    <p class="page-header__desc"  id="pageDesc">Khám phá những bộ phim hay nhất đang được chiếu tại CineVerse</p>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab('showing',  this)">Đang Chiếu</div>
+    <div class="tab"        onclick="switchTab('upcoming', this)">Sắp Chiếu</div>
+    <div class="tab"        onclick="switchTab('special',  this)">Đặc Biệt</div>
+  </div>
+
+  <!-- CONTENT AREA -->
+  <div class="content-area">
+
+    <!-- SIDEBAR FILTERS -->
+    <aside class="sidebar">
+      <div class="filter-section">
+        <div class="filter-title">Thể Loại</div>
+        <div class="filter-options">
+          <label class="filter-option"><input type="checkbox" value="action"    onchange="filterMovies()"> Hành động</label>
+          <label class="filter-option"><input type="checkbox" value="romance"   onchange="filterMovies()"> Tình cảm</label>
+          <label class="filter-option"><input type="checkbox" value="horror"    onchange="filterMovies()"> Kinh dị</label>
+          <label class="filter-option"><input type="checkbox" value="comedy"    onchange="filterMovies()"> Hài hước</label>
+          <label class="filter-option"><input type="checkbox" value="scifi"     onchange="filterMovies()"> Khoa học viễn tưởng</label>
+          <label class="filter-option"><input type="checkbox" value="animation" onchange="filterMovies()"> Hoạt hình</label>
+          <label class="filter-option"><input type="checkbox" value="thriller"  onchange="filterMovies()"> Tâm lý</label>
+        </div>
+      </div>
+      <div class="filter-section">
+        <div class="filter-title">Đánh Giá</div>
+        <div class="filter-options">
+          <label class="filter-option"><input type="checkbox" value="9"> ★ 9.0+</label>
+          <label class="filter-option"><input type="checkbox" value="8"> ★ 8.0+</label>
+          <label class="filter-option"><input type="checkbox" value="7"> ★ 7.0+</label>
+        </div>
+      </div>
+      <div class="filter-section">
+        <div class="filter-title">Thời Lượng</div>
+        <div class="filter-options">
+          <label class="filter-option"><input type="checkbox" value="short">  Dưới 2 tiếng</label>
+          <label class="filter-option"><input type="checkbox" value="medium"> 2 – 2.5 tiếng</label>
+          <label class="filter-option"><input type="checkbox" value="long">   Trên 2.5 tiếng</label>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main-content">
+      <div class="search-sort">
+        <input class="search-box form-input" id="searchInput" type="text" placeholder="🔍 Tìm kiếm phim..." oninput="filterMovies()">
+        <select class="sort-select form-select" id="sortSelect" onchange="filterMovies()">
+          <option value="rating">Đánh giá cao nhất</option>
+          <option value="newest">Mới nhất</option>
+          <option value="title">Tên A-Z</option>
+        </select>
+      </div>
+      <div class="results-info">Hiển thị <span id="resultCount">0</span> phim</div>
+      <div class="movies-grid" id="moviesGrid"></div>
+      <div class="pagination"  id="pagination"></div>
+    </main>
+
+  </div>
+
+  <script src="script/shared.js"></script>
+  <script src="script/movies.js"></script>
+</body>
+</html>

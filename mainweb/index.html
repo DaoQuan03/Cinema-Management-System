@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CineVerse – Đặt Vé Xem Phim</title>
+  <link rel="stylesheet" href="style/index.css">
+  <link rel="stylesheet" href="style/base.css">
+</head>
+<body>
+
+  <!-- NAVIGATION -->
+  <nav class="nav nav--fixed" id="navbar">
+    <a href="index.html" class="nav__logo">Cine<span>Verse</span></a>
+    <ul class="nav__links">
+      <li><a href="movies.html">Phim Đang Chiếu</a></li>
+      <li><a href="movies.html?tab=upcoming">Phim Sắp Chiếu</a></li>
+      <li><a href="#genres">Thể Loại</a></li>
+      <li><a href="#promo">Ưu Đãi</a></li>
+    </ul>
+    <div class="nav__actions">
+      <a href="auth.html"               class="btn btn--outline">Đăng Nhập</a>
+      <a href="auth.html?mode=register" class="btn btn--primary">Đăng Ký</a>
+    </div>
+  </nav>
+
+ 
+  <section class="hero">
+    <div class="hero__bg"></div>
+    <div class="hero__particles" id="heroParticles"></div>
+    <div class="hero__filmstrip" aria-hidden="true">
+      <div class="hero__filmcol" id="filmCol1"></div>
+      <div class="hero__filmcol" id="filmCol2"></div>
+      <div class="hero__filmcol" id="filmCol3"></div>
+    </div>
+    <div class="hero__content">
+      <div class="hero__badge">Rạp Chiếu Phim Số 1 Việt Nam</div>
+      <h1 class="hero__heading">
+        Trải Nghiệm
+        <span class="hero__heading--accent">Điện Ảnh</span>
+        Đỉnh Cao
+      </h1>
+      <p class="hero__desc">Đặt vé trực tuyến dễ dàng, chọn ghế yêu thích và tận hưởng những bộ phim bom tấn mới nhất ngay hôm nay.</p>
+      <div class="hero__actions">
+        <a href="movies.html"  class="btn btn--hero">Đặt Vé Ngay</a>
+        <a href="#now-showing" class="btn btn--ghost">Xem Danh Sách Phim</a>
+      </div>
+      <div class="hero__stats">
+        <div><div class="hero__stat-num">200+</div><div class="hero__stat-label">Phim đang chiếu</div></div>
+        <div><div class="hero__stat-num">50+</div><div class="hero__stat-label">Phòng chiếu</div></div>
+        <div><div class="hero__stat-num">1M+</div><div class="hero__stat-label">Khách hàng tin dùng</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="now-showing">
+    <div class="section-header reveal">
+      <div>
+        <div class="section-label">Đang Chiếu</div>
+        <div class="section-title">Phim Nổi Bật Tuần Này</div>
+      </div>
+      <a href="movies.html" class="see-all">Xem tất cả →</a>
+    </div>
+    <div class="movies-grid" id="nowShowingGrid"></div>
+  </section>
+
+  <section class="section" id="genres" style="padding-top:0">
+    <div class="reveal">
+      <div class="section-label">Khám Phá</div>
+      <div class="section-title" style="margin-bottom:28px">Theo Thể Loại</div>
+    </div>
+    <div class="genres-row reveal">
+      <a href="movies.html?genre=action"    class="genre-pill active" data-genre="action">Hành Động</a>
+      <a href="movies.html?genre=romance"   class="genre-pill" data-genre="romance">Tình Cảm</a>
+      <a href="movies.html?genre=horror"    class="genre-pill" data-genre="horror">Kinh Dị</a>
+      <a href="movies.html?genre=comedy"    class="genre-pill" data-genre="comedy">Hài Hước</a>
+      <a href="movies.html?genre=scifi"     class="genre-pill" data-genre="scifi">Khoa Học Viễn Tưởng</a>
+      <a href="movies.html?genre=animation" class="genre-pill" data-genre="animation">Hoạt Hình</a>
+      <a href="movies.html?genre=thriller"  class="genre-pill" data-genre="thriller">Tâm Lý</a>
+      <a href="movies.html?genre=drama"     class="genre-pill" data-genre="drama">Drama</a>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="section section--alt">
+    <div class="section-header reveal">
+      <div>
+        <div class="section-label">Tại Sao Chọn Chúng Tôi</div>
+        <div class="section-title">Trải Nghiệm Hoàn Hảo</div>
+      </div>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card reveal">
+        <div class="feature-card__icon"></div>
+        <div class="feature-card__title">Chọn Ghế Real-Time</div>
+        <p class="feature-card__desc">Xem trạng thái ghế ngồi trực tiếp. Ghế được cập nhật theo thời gian thực khi người khác đặt vé.</p>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-card__icon"></div>
+        <div class="feature-card__title">Đặt Vé Siêu Nhanh</div>
+        <p class="feature-card__desc">Chỉ cần 3 bước: chọn phim → chọn ghế → thanh toán. Vé điện tử gửi ngay về email.</p>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-card__icon"></div>
+        <div class="feature-card__title">Vé QR Code</div>
+        <p class="feature-card__desc">Mã QR duy nhất cho mỗi vé. Check-in nhanh chóng tại rạp, không cần xếp hàng.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROMO -->
+  <section class="section" id="promo">
+    <div class="promo reveal">
+      <div>
+        <h2 class="promo__heading">Ưu Đãi Tháng 3!</h2>
+        <p class="promo__desc">Giảm 30% cho tất cả vé xem phim vào thứ 4 hàng tuần. Áp dụng cho mọi loại ghế, kể cả VIP Sweetbox.</p>
+        <a href="movies.html" class="btn btn--hero" style="margin-top:24px;display:inline-flex">Đặt Vé Ngay</a>
+      </div>
+      <div class="promo__code-box">
+        <div class="promo__code-label">Mã Giảm Giá</div>
+        <div class="promo__code-value">WED30</div>
+        <div class="promo__code-desc">Mỗi thứ 4 trong tháng 3</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer__grid">
+      <div class="footer__brand">
+        <a href="index.html" class="nav__logo" style="display:block;margin-bottom:14px">Cine<span style="color:var(--text)">Verse</span></a>
+        <p>Hệ thống rạp chiếu phim hàng đầu Việt Nam. Trải nghiệm điện ảnh đỉnh cao với công nghệ đặt vé thông minh.</p>
+      </div>
+      <div class="footer__col"><h4>Phim</h4><ul><li><a href="movies.html">Đang Chiếu</a></li><li><a href="movies.html?tab=upcoming">Sắp Chiếu</a></li><li><a href="movies.html?genre=action">Thể Loại</a></li></ul></div>
+      <div class="footer__col"><h4>Tài Khoản</h4><ul><li><a href="auth.html">Đăng Nhập</a></li><li><a href="auth.html?mode=register">Đăng Ký</a></li><li><a href="profile.html">Hồ Sơ</a></li></ul></div>
+      <div class="footer__col"><h4>Hỗ Trợ</h4><ul><li><a href="#">Liên Hệ</a></li><li><a href="#">FAQ</a></li><li><a href="#">Chính Sách Đổi Vé</a></li></ul></div>
+    </div>
+    <div class="footer__bottom">
+      <p>© 2025 CineVerse. All rights reserved.</p>
+      <div class="social-links">
+        <a href="#" class="social-link">📘</a>
+        <a href="#" class="social-link">📸</a>
+        <a href="#" class="social-link">🐦</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script/shared.js"></script>
+  <script src="script/index.js"></script>
+</body>
+</html>

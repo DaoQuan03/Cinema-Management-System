@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Đặt Vé – CineVerse</title>
+  <link rel="stylesheet" href="style/base.css">
+  <link rel="stylesheet" href="style/booking.css">
+</head>
+<body>
+
+  <!-- NAVIGATION -->
+  <nav class="nav">
+    <a href="index.html" class="nav__logo">Cine<span>Verse</span></a>
+    <a href="movies.html" style="color:var(--muted);font-size:14px;font-weight:500">← Tiếp Tục Mua Vé</a>
+  </nav>
+
+  <!-- STEPS BAR -->
+  <div class="steps-bar">
+    <div class="steps">
+      <div class="step step--done">
+        <div class="step__num">✓</div>
+        <div class="step__label">Chọn Phim</div>
+      </div>
+      <div class="step-connector step-connector--done"></div>
+      <div class="step step--done">
+        <div class="step__num">✓</div>
+        <div class="step__label">Chọn Ghế</div>
+      </div>
+      <div class="step-connector step-connector--done"></div>
+      <div class="step step--active">
+        <div class="step__num">3</div>
+        <div class="step__label">Thanh Toán</div>
+      </div>
+      <div class="step-connector"></div>
+      <div class="step">
+        <div class="step__num">4</div>
+        <div class="step__label">Nhận Vé</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN LAYOUT -->
+  <div class="booking-layout">
+
+    <!-- LEFT: Forms -->
+    <div>
+
+      <!-- 1. Contact info -->
+      <div class="section-card">
+        <div class="section-card__title">
+          <div class="section-num">1</div>
+          Thông Tin Liên Hệ
+        </div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label">Họ Và Tên</label>
+            <input class="form-input" id="fullname" type="text" placeholder="Nguyễn Văn An">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Email</label>
+            <input class="form-input" id="email" type="email" placeholder="email@example.com">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Số Điện Thoại</label>
+            <input class="form-input" id="phone" type="tel" placeholder="0901 234 567">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Mã Thành Viên (không bắt buộc)</label>
+            <input class="form-input" type="text" placeholder="Nhập mã thẻ thành viên">
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. Promo code -->
+      <div class="section-card">
+        <div class="section-card__title">
+          <div class="section-num">2</div>
+          Mã Giảm Giá
+        </div>
+        <div class="promo-row">
+          <input class="form-input promo-input" id="promoInput" type="text" placeholder="Nhập mã giảm giá (VD: WED30)">
+          <button class="btn-apply" onclick="applyPromo()">Áp Dụng</button>
+        </div>
+        <div class="promo-msg" id="promoMsg"></div>
+      </div>
+
+      <!-- 3. Payment method -->
+      <div class="section-card">
+        <div class="section-card__title">
+          <div class="section-num">3</div>
+          Phương Thức Thanh Toán
+        </div>
+        <div class="payment-methods">
+          <div class="payment-method selected" onclick="selectPayment(this,'card')">
+            <div class="payment-method__icon"></div>
+            <div class="payment-method__name">Thẻ Tín Dụng</div>
+            <div class="payment-method__desc">Visa / Mastercard</div>
+          </div>
+          <div class="payment-method" onclick="selectPayment(this,'momo')">
+            <div class="payment-method__icon"></div>
+            <div class="payment-method__name">MoMo</div>
+            <div class="payment-method__desc">Ví điện tử</div>
+          </div>
+          <div class="payment-method" onclick="selectPayment(this,'banking')">
+            <div class="payment-method__icon"></div>
+            <div class="payment-method__name">Chuyển Khoản</div>
+            <div class="payment-method__desc">Internet Banking</div>
+          </div>
+          <div class="payment-method" onclick="selectPayment(this,'vnpay')">
+            <div class="payment-method__icon"></div>
+            <div class="payment-method__name">VNPay</div>
+            <div class="payment-method__desc">QR Code</div>
+          </div>
+          <div class="payment-method" onclick="selectPayment(this,'zalopay')">
+            <div class="payment-method__icon"></div>
+            <div class="payment-method__name">ZaloPay</div>
+            <div class="payment-method__desc">Ví Zalo</div>
+          </div>
+          <div class="payment-method" onclick="selectPayment(this,'counter')">
+            <div class="payment-method__icon"></div>
+            <div class="payment-method__name">Tại Quầy</div>
+            <div class="payment-method__desc">Tiền mặt</div>
+          </div>
+        </div>
+
+        <!-- Card details form -->
+        <div class="card-form show" id="cardForm">
+          <div class="form-grid" style="margin-top:18px">
+            <div class="form-group form-group--full">
+              <label class="form-label">Số Thẻ</label>
+              <div class="card-input-wrap">
+                <input class="form-input" id="cardNum" type="text" placeholder="1234 5678 9012 3456" maxlength="19" oninput="formatCardNumber(this)">
+                <span class="card-flag" id="cardIcon">💳</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Tên Trên Thẻ</label>
+              <input class="form-input" type="text" placeholder="NGUYEN VAN AN">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Ngày Hết Hạn</label>
+              <input class="form-input" type="text" placeholder="MM/YY" maxlength="5" oninput="formatExpiry(this)">
+            </div>
+            <div class="form-group">
+              <label class="form-label">CVV</label>
+              <input class="form-input" type="password" placeholder="•••" maxlength="4">
+            </div>
+          </div>
+        </div>
+
+        <!-- Other payment info -->
+        <div class="payment-info-box" id="paymentInfoBox"></div>
+      </div>
+
+    </div>
+
+    <!-- RIGHT: Order summary -->
+    <div class="order-card">
+      <div class="order-card__header">
+        <div class="order-card__title">Tóm Tắt Đơn Hàng</div>
+      </div>
+      <div class="order-card__body">
+
+        <div class="movie-summary">
+          <div class="movie-thumb"><img id="summaryPoster" src="" alt=""></div>
+          <div>
+            <div class="movie-summary__title" id="summaryTitle">Đang tải...</div>
+            <div class="movie-summary__meta"  id="summaryMeta"></div>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+        <div style="font-size:12px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Ghế Đã Chọn</div>
+        <div class="seat-tags" id="seatTagsDisplay"></div>
+        <div class="divider"></div>
+
+        <div id="orderRows"></div>
+        <div class="order-row order-row--total">
+          <span>Tổng Thanh Toán</span>
+          <span id="finalTotal">0đ</span>
+        </div>
+
+        <button class="pay-btn btn" onclick="processPayment()">
+          <span></span>
+          <span id="payBtnText">Thanh Toán Ngay</span>
+        </button>
+        <p class="terms-note">Bằng cách thanh toán, bạn đồng ý với <a href="#" class="link-gold">điều khoản sử dụng</a> của CineVerse.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- LOADING OVERLAY -->
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="spinner"></div>
+    <div class="loading-text">Đang xử lý thanh toán...</div>
+  </div>
+
+  <!-- SUCCESS OVERLAY -->
+  <div class="success-overlay" id="successOverlay">
+    <div class="success-overlay__icon">🎉</div>
+    <h2 class="success-overlay__title">Đặt Vé Thành Công!</h2>
+    <p class="success-overlay__sub">Vé điện tử đã được gửi đến email của bạn</p>
+    <div class="ticket-preview">
+      <div class="ticket-id" id="ticketId">CVE-2025-XXXXX</div>
+      <div class="qr-box"></div>
+      <div class="ticket-info" id="ticketInfo"></div>
+    </div>
+    <div style="display:flex;gap:12px">
+      <button class="btn-download" onclick="downloadTicket()">⬇ Tải Vé Về</button>
+      <a href="movies.html" class="btn-back-home">Tiếp Tục Mua Vé</a>
+    </div>
+  </div>
+
+  <script src="script/shared.js"></script>
+  <script src="script/booking.js"></script>
+</body>
+</html>

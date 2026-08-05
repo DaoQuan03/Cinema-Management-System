@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tài Khoản – CineVerse</title>
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/auth-profile.css">
+</head>
+<body>
+
+  <div class="dashboard-layout">
+
+    <!--SIDEBAR -->
+    <aside class="dash-sidebar">
+      <a href="index.html" class="dash-sidebar__logo">
+        Cine<span>Verse</span>
+      </a>
+
+      <div class="dash-sidebar__user">
+        <div class="dash-avatar" id="sidebarAvatar">U</div>
+        <div>
+          <div class="dash-user__name" id="sidebarName">Đang tải...</div>
+          <div class="dash-user__role" id="sidebarRole">Thành viên</div>
+        </div>
+      </div>
+
+      <div class="nav-section">Người Dùng</div>
+      <nav>
+        <a class="nav-item active" onclick="showPanel('dashboard',     this)"><span class="nav-icon">📊</span> Tổng Quan</a>
+        <a class="nav-item"        onclick="showPanel('tickets',       this)"><span class="nav-icon">🎫</span> Vé Của Tôi</a>
+        <a class="nav-item"        onclick="showPanel('profile-edit',  this)"><span class="nav-icon">👤</span> Thông Tin Cá Nhân</a>
+      </nav>
+
+      <div class="nav-section">Admin &amp; Nhân Viên</div>
+      <nav>
+        <a class="nav-item" onclick="showPanel('movies-manage', this)"><span class="nav-icon">🎬</span> Quản Lý Phim</a>
+        <a class="nav-item" onclick="showPanel('halls',         this)"><span class="nav-icon">🏛</span> Phòng Chiếu</a>
+        <a class="nav-item" onclick="showPanel('schedules',     this)"><span class="nav-icon">📅</span> Lịch Chiếu</a>
+        <a class="nav-item" onclick="showPanel('revenue',       this)"><span class="nav-icon">💰</span> Doanh Thu</a>
+        <a class="nav-item" onclick="showPanel('scanner',       this)"><span class="nav-icon">📷</span> Quét Vé QR</a>
+        <a class="nav-item" onclick="showPanel('sold',          this)"><span class="nav-icon">🎟</span> Vé Đã Bán</a>
+      </nav>
+
+      <div class="dash-sidebar__logout">
+        <button class="btn btn--danger btn--full" onclick="logout()">🚪 Đăng Xuất</button>
+      </div>
+    </aside>
+
+    <!--MAIN CONTENT-->
+    <div class="dash-main">
+
+      <!-- Top bar -->
+      <div class="topbar">
+        <div class="topbar__crumb">CineVerse / <span id="currentPageLabel">Tổng Quan</span></div>
+        <div class="topbar__actions">
+          <a href="movies.html" style="color:var(--muted);font-size:13px;text-decoration:none">🎬 Đặt Vé Mới</a>
+          <div class="notif-btn" title="Thông báo">
+  
+            <div class="notif-badge">3</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── PANEL: Dashboard ─────────────────────────────── -->
+      <div class="panel active" id="panel-dashboard">
+        <div class="section-title section-title--sm">Tổng Quan</div>
+
+        <!-- User stats -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-card__icon"></div>
+            <div class="stat-card__value">12</div>
+            <div class="stat-card__label">Vé Đã Đặt</div>
+            <div class="stat-card__change stat-card__change--up">↑ 3 vé tháng này</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card__icon"></div>
+            <div class="stat-card__value">1.8M</div>
+            <div class="stat-card__label">Tổng Chi Tiêu</div>
+            <div class="stat-card__change stat-card__change--up">↑ 12% tháng trước</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card__icon"></div>
+            <div class="stat-card__value">24</div>
+            <div class="stat-card__label">Đánh Giá Đã Viết</div>
+            <div class="stat-card__change stat-card__change--up">↑ 5 đánh giá mới</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card__icon"></div>
+            <div class="stat-card__value">Gold</div>
+            <div class="stat-card__label">Hạng Thành Viên</div>
+            <div class="stat-card__change" style="color:var(--gold)">350 điểm tích lũy</div>
+          </div>
+        </div>
+
+        <!-- Recent tickets -->
+        <div class="section-title section-title--sm">Vé Gần Đây</div>
+        <div class="card">
+          <div class="card__header">
+            <div class="card__title">Lịch Sử Đặt Vé</div>
+            <span class="badge badge--success">3 vé tháng này</span>
+          </div>
+          <div class="card__body" id="recentTickets"></div>
+        </div>
+
+        <!-- Admin system stats (shown only for admin/staff) -->
+        <div id="adminStats" style="display:none">
+          <div class="section-title section-title--sm" style="margin-top:16px">Thống Kê Hệ Thống</div>
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-card__icon"></div>
+              <div class="stat-card__value">48</div>
+              <div class="stat-card__label">Phim Đang Chiếu</div>
+              <div class="stat-card__change stat-card__change--up">↑ 5 phim mới</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-card__icon"></div>
+              <div class="stat-card__value">12</div>
+              <div class="stat-card__label">Phòng Chiếu</div>
+              <div class="stat-card__change" style="color:var(--blue)">2 đang bảo trì</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-card__icon"></div>
+              <div class="stat-card__value">2,847</div>
+              <div class="stat-card__label">Vé Bán Hôm Nay</div>
+              <div class="stat-card__change stat-card__change--up">↑ 18% hôm qua</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-card__icon"></div>
+              <div class="stat-card__value">142M</div>
+              <div class="stat-card__label">Doanh Thu Hôm Nay</div>
+              <div class="stat-card__change stat-card__change--up">↑ 22% hôm qua</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PANEL: My Tickets -->
+      <div class="panel" id="panel-tickets">
+        <div class="section-title section-title--sm">Vé Của Tôi</div>
+        <div class="card">
+          <div class="card__header">
+            <div class="card__title">Toàn Bộ Lịch Sử Vé</div>
+          </div>
+          <div class="card__body">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Phim</th>
+                  <th>Ngày Chiếu</th>
+                  <th>Ghế</th>
+                  <th>Tổng Tiền</th>
+                  <th>Trạng Thái</th>
+                  <th>Hành Động</th>
+                </tr>
+              </thead>
+              <tbody id="ticketsTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- PANEL: Profile Edit -->
+      <div class="panel" id="panel-profile-edit">
+        <div class="section-title section-title--sm">Thông Tin Cá Nhân</div>
+        <div class="card" style="padding:28px">
+          <div class="profile-grid">
+            <!-- Avatar column -->
+            <div class="avatar-section">
+              <div class="avatar-large" id="bigAvatar">U</div>
+              <div class="avatar-name" id="avatarName"></div>
+              <div class="avatar-role" id="avatarRole"></div>
+              <button class="avatar-change-btn"> Đổi Ảnh</button>
+            </div>
+            <!-- Form column -->
+            <div>
+              <div class="profile-form-grid">
+                <div class="form-group">
+                  <label class="form-label" for="profileName">Họ Và Tên</label>
+                  <input class="form-input" id="profileName" type="text">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="profileEmail">Email</label>
+                  <input class="form-input" id="profileEmail" type="email">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Số Điện Thoại</label>
+                  <input class="form-input" type="tel" placeholder="0901 234 567">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Ngày Sinh</label>
+                  <input class="form-input" type="date">
+                </div>
+                <div class="form-group" style="grid-column:1/-1">
+                  <label class="form-label">Địa Chỉ</label>
+                  <input class="form-input" type="text" placeholder="123 Đường ABC, TP. HCM">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Mật Khẩu Mới</label>
+                  <input class="form-input" type="password" placeholder="Để trống nếu không đổi">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Xác Nhận Mật Khẩu</label>
+                  <input class="form-input" type="password" placeholder="Nhập lại mật khẩu mới">
+                </div>
+              </div>
+              <button class="save-btn" onclick="saveProfile()">Lưu Thay Đổi</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!--PANEL: Movie Management-->
+      <div class="panel" id="panel-movies-manage">
+        <div class="section-title section-title--sm">Quản Lý Phim</div>
+        <div class="action-bar">
+          <input class="search-dash form-input" type="text" placeholder="🔍 Tìm kiếm phim..." oninput="filterMoviesTable(this.value)">
+          <button class="btn-add" onclick="showAddMovieForm()">+ Thêm Phim</button>
+        </div>
+        <div class="card">
+          <div class="card__body">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Phim</th>
+                  <th>Thể Loại</th>
+                  <th>Đánh Giá</th>
+                  <th>Thời Lượng</th>
+                  <th>Trạng Thái</th>
+                  <th>Hành Động</th>
+                </tr>
+              </thead>
+              <tbody id="moviesManageBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!--PANEL: Halls-->
+      <div class="panel" id="panel-halls">
+        <div class="section-title section-title--sm">Quản Lý Phòng Chiếu</div>
+        <div class="action-bar">
+          <button class="btn-add">+ Thêm Phòng</button>
+        </div>
+        <div class="card">
+          <div class="card__body">
+            <table class="table">
+              <thead>
+                <tr><th>Phòng</th><th>Loại</th><th>Số Ghế</th><th>Công Suất</th><th>Trạng Thái</th><th>Hành Động</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>Phòng 1 – Standard</td><td>Standard 2D</td><td>120</td><td>80%</td><td><span class="badge badge--success">Hoạt động</span></td><td><span class="action-icon action-icon--edit">✏️</span> <span class="action-icon action-icon--del">🗑</span></td></tr>
+                <tr><td>Phòng 2 – IMAX</td><td>IMAX Premium</td><td>200</td><td>95%</td><td><span class="badge badge--success">Hoạt động</span></td><td><span class="action-icon action-icon--edit">✏️</span> <span class="action-icon action-icon--del">🗑</span></td></tr>
+                <tr><td>Phòng 3 – Dolby</td><td>Dolby Atmos</td><td>150</td><td>72%</td><td><span class="badge badge--success">Hoạt động</span></td><td><span class="action-icon action-icon--edit">✏️</span> <span class="action-icon action-icon--del">🗑</span></td></tr>
+                <tr><td>Phòng 4 – VIP</td><td>VIP Recliner</td><td>60</td><td>88%</td><td><span class="badge badge--success">Hoạt động</span></td><td><span class="action-icon action-icon--edit">✏️</span> <span class="action-icon action-icon--del">🗑</span></td></tr>
+                <tr><td>Phòng 5 – 4DX</td><td>4DX Experience</td><td>80</td><td>60%</td><td><span class="badge badge--warning">Bảo trì</span></td><td><span class="action-icon action-icon--edit">✏️</span> <span class="action-icon action-icon--del">🗑</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!--  PANEL: Schedule-->
+      <div class="panel" id="panel-schedules">
+        <div class="section-title section-title--sm">Lịch Chiếu – Suất Chiếu</div>
+        <div class="action-bar">
+          <input class="form-input" type="date" style="max-width:200px">
+          <button class="btn-add">+ Tạo Suất Chiếu</button>
+        </div>
+        <div class="card">
+          <div class="card__body">
+            <table class="table">
+              <thead>
+                <tr><th>Phim</th><th>Phòng</th><th>Ngày</th><th>Giờ</th><th>Ghế Còn</th><th>Trạng Thái</th><th>Hành Động</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>Inception 2</td><td>Phòng 2 – IMAX</td><td>12/03/2025</td><td>19:00</td><td>45/200</td><td><span class="badge badge--success">Đang mở</span></td><td><span class="action-icon action-icon--edit">✏️</span> <span class="action-icon action-icon--del">🗑</span></td></tr>
+                <tr><td>Avengers: Endgame 2</td><td>Phòng 1</td><td>12/03/2025</td><td>21:30</td><td>80/120</td><td><span class="badge badge--success">Đang mở</span></td><td><span class="action-icon action-icon--edit">✏️</span> <span class="action-icon action-icon--del">🗑</span></td></tr>
+                <tr><td>Dune: Part Three</td><td>Phòng 4 – VIP</td><td>13/03/2025</td><td>16:30</td><td>12/60</td><td><span class="badge badge--warning">Sắp đầy</span></td><td><span class="action-icon action-icon--edit">✏️</span> <span class="action-icon action-icon--del">🗑</span></td></tr>
+                <tr><td>Frozen 3</td><td>Phòng 3 – Dolby</td><td>13/03/2025</td><td>10:00</td><td>90/150</td><td><span class="badge badge--success">Đang mở</span></td><td><span class="action-icon action-icon--edit">✏️</span> <span class="action-icon action-icon--del">🗑</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- PANEL: Revenue -->
+      <div class="panel" id="panel-revenue">
+        <div class="section-title section-title--sm">Báo Cáo Doanh Thu</div>
+        <div class="stats-grid">
+          <div class="stat-card"><div class="stat-card__icon"></div><div class="stat-card__value">2.4 tỷ</div><div class="stat-card__label">Doanh Thu Tháng</div><div class="stat-card__change stat-card__change--up">↑ 18%</div></div>
+          <div class="stat-card"><div class="stat-card__icon"></div><div class="stat-card__value">18,432</div><div class="stat-card__label">Vé Bán Tháng</div><div class="stat-card__change stat-card__change--up">↑ 12%</div></div>
+          <div class="stat-card"><div class="stat-card__icon"></div><div class="stat-card__value">130K</div><div class="stat-card__label">Giá Vé Trung Bình</div><div class="stat-card__change stat-card__change--up">↑ 5%</div></div>
+          <div class="stat-card"><div class="stat-card__icon"></div><div class="stat-card__value">Inception 2</div><div class="stat-card__label">Phim Ăn Khách Nhất</div><div class="stat-card__change" style="color:var(--gold)">4,821 vé</div></div>
+        </div>
+
+        <!-- Revenue chart -->
+        <div class="card" style="margin-bottom:24px">
+          <div class="card__header">
+            <div class="card__title">Doanh Thu 6 Tháng Gần Nhất</div>
+          </div>
+          <div class="revenue-chart" id="revenueChart"></div>
+          <div style="display:flex;justify-content:center;gap:20px;padding:8px 20px 16px;font-size:12px;color:var(--muted)">
+            <span>T10</span><span>T11</span><span>T12</span><span>T1</span><span>T2</span><span>T3</span>
+          </div>
+        </div>
+
+        <!-- Revenue by movie -->
+        <div class="card">
+          <div class="card__header"><div class="card__title">Doanh Thu Theo Phim</div></div>
+          <div class="card__body">
+            <table class="table">
+              <thead><tr><th>Phim</th><th>Vé Bán</th><th>Doanh Thu</th><th>Tỷ Lệ</th></tr></thead>
+              <tbody>
+                <tr><td>Inception 2</td><td>4,821</td><td>628M</td><td><div style="background:rgba(232,184,109,.2);border-radius:4px;height:8px"><div style="background:var(--gold);width:90%;height:8px;border-radius:4px"></div></div></td></tr>
+                <tr><td>Avengers: Endgame 2</td><td>3,940</td><td>513M</td><td><div style="background:rgba(232,184,109,.2);border-radius:4px;height:8px"><div style="background:var(--gold);width:73%;height:8px;border-radius:4px"></div></div></td></tr>
+                <tr><td>Dune: Part Three</td><td>2,810</td><td>365M</td><td><div style="background:rgba(232,184,109,.2);border-radius:4px;height:8px"><div style="background:var(--gold);width:52%;height:8px;border-radius:4px"></div></div></td></tr>
+                <tr><td>Interstellar 2</td><td>2,340</td><td>305M</td><td><div style="background:rgba(232,184,109,.2);border-radius:4px;height:8px"><div style="background:var(--gold);width:44%;height:8px;border-radius:4px"></div></div></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- PANEL: QR Scanner-->
+      <div class="panel" id="panel-scanner">
+        <div class="section-title section-title--sm">Quét Mã QR Check-in</div>
+        <div class="qr-scanner">
+          <div class="qr-scanner__icon">📷</div>
+          <p class="qr-scanner__desc">Nhập mã vé để xác nhận check-in tại quầy</p>
+          <input class="qr-input" id="qrInput" type="text" placeholder="CVE-2025-XXXXX" maxlength="14">
+          <br>
+          <button class="btn btn--primary" onclick="scanQR()">✓ Xác Nhận Check-in</button>
+          <div class="qr-result" id="qrResult"></div>
+        </div>
+      </div>
+
+      <!-- PANEL: Sold Tickets-->
+      <div class="panel" id="panel-sold">
+        <div class="section-title section-title--sm">Danh Sách Vé Đã Bán</div>
+        <div class="card">
+          <div class="card__body">
+            <table class="table">
+              <thead>
+                <tr><th>Mã Vé</th><th>Khách Hàng</th><th>Phim</th><th>Suất</th><th>Ghế</th><th>Thanh Toán</th><th>Trạng Thái</th></tr>
+              </thead>
+              <tbody>
+                <tr><td style="color:var(--gold);font-weight:600">CVE-2025-A3F2K</td><td>Nguyễn Văn An</td><td>Inception 2</td><td>19:00 – 12/3</td><td>D4, D5</td><td>300,000đ</td><td><span class="badge badge--success">Đã check-in</span></td></tr>
+                <tr><td style="color:var(--gold);font-weight:600">CVE-2025-B7X9L</td><td>Trần Thị Hoa</td><td>Avengers 2</td><td>21:30 – 12/3</td><td>A3, A4, A5</td><td>300,000đ</td><td><span class="badge badge--blue">Chưa check-in</span></td></tr>
+                <tr><td style="color:var(--gold);font-weight:600">CVE-2025-C2M4P</td><td>Lê Minh Tuấn</td><td>Dune 3</td><td>16:30 – 13/3</td><td>F1, F2</td><td>400,000đ</td><td><span class="badge badge--warning">Hoàn tiền</span></td></tr>
+                <tr><td style="color:var(--gold);font-weight:600">CVE-2025-D5Q8R</td><td>Phạm Thu Hà</td><td>Inception 2</td><td>19:00 – 12/3</td><td>E7, E8</td><td>300,000đ</td><td><span class="badge badge--success">Đã check-in</span></td></tr>
+                <tr><td style="color:var(--gold);font-weight:600">CVE-2025-E1K3N</td><td>Đỗ Quang Vinh</td><td>La La Land 2</td><td>14:00 – 13/3</td><td>B2, B3</td><td>200,000đ</td><td><span class="badge badge--success">Đã check-in</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /dash-main -->
+  </div><!-- /dashboard-layout -->
+
+  <script src="script/shared.js"></script>
+  <script src="script/profile.js"></script>
+</body>
+</html>
