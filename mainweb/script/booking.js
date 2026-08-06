@@ -13,9 +13,25 @@ let bookingMovie        = {};
 /* ── Init ──────────────────────────────────────────────────── */
 document.addEventListener('DOMContentLoaded', () => {
 
+  // Require user login before accessing booking page
+  const user = getCurrentUser();
+  if (!user) {
+    showToast('⚠️ Vui lòng đăng nhập tài khoản để tiếp tục đặt vé!', 'warning');
+    setTimeout(() => {
+      window.location.href = 'auth.html?redirect=booking.html';
+    }, 1200);
+    return;
+  }
+
+  // Autofill user contact info
+  const fullnameInput = document.getElementById('fullname');
+  const emailInput = document.getElementById('email');
+  if (fullnameInput && user.name) fullnameInput.value = user.name;
+  if (emailInput && user.email) emailInput.value = user.email;
+
   // Load data from previous page
-  bookingSeats     = JSON.parse(localStorage.getItem('cv_booking_seats') || '["D4","D5","E3"]');
-  bookingBaseTotal = parseInt(localStorage.getItem('cv_booking_total')  || '450000');
+  bookingSeats     = JSON.parse(localStorage.getItem('cv_booking_seats') || '["D4","D5"]');
+  bookingBaseTotal = parseInt(localStorage.getItem('cv_booking_total')  || '300000');
   bookingMovie     = JSON.parse(localStorage.getItem('cv_booking_movie') || JSON.stringify({
     title: 'Inception 2',
     poster: 'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=400&q=80',

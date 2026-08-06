@@ -30,9 +30,10 @@ let userRating     = 0;
 let reviews        = [...SAMPLE_REVIEWS];
 
 /* ── Init ──────────────────────────────────────────────────── */
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
   const id = parseInt(getParam('id')) || 1;
-  movie = getMovies().find(m => m.id === id) || getMovies()[0];
+  const allMovies = await getMoviesAsync();
+  movie = allMovies.find(m => m.id === id) || allMovies[0];
 
   populateHero();
   populateCast();
@@ -303,6 +304,16 @@ function startRealtimeSimulation() {
 /* ── Proceed to booking page ───────────────────────────────── */
 function proceedToBooking() {
   if (selectedSeats.size === 0) return;
+
+  const user = getCurrentUser();
+  if (!user) {
+    showToast('⚠️ Vui lòng đăng nhập tài khoản để tiếp tục đặt vé!', 'warning');
+    setTimeout(() => {
+      window.location.href = `auth.html?redirect=${encodeURIComponent(location.pathname + location.search)}`;
+    }, 1200);
+    return;
+  }
+
   window.location.href = 'booking.html';
 }
 

@@ -76,20 +76,9 @@
           <h2 class="auth-title">Đăng Ký</h2>
           <p class="auth-sub">Tạo tài khoản CineVerse miễn phí!</p>
 
-          <div style="margin-bottom:16px">
-            <div class="form-label">Loại Tài Khoản</div>
-            <div class="role-select">
-              <div class="role-btn selected" onclick="selectRole(this,'user')">
-                <span class="role-btn__icon"></span>User
-              </div>
-              <div class="role-btn" onclick="selectRole(this,'staff')">
-                <span class="role-btn__icon"></span>Nhân viên
-              </div>
-              <div class="role-btn" onclick="selectRole(this,'admin')">
-                <span class="role-btn__icon"></span>Admin
-              </div>
-            </div>
-          </div>
+          <!-- Public registration is always Customer (User) role -->
+          <input type="hidden" id="selectedRole" value="user">
+
 
           <div class="form-group">
             <label class="form-label" for="regName">Họ Và Tên</label>

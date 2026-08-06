@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin – Quản Lý Lịch Chiếu | CineVerse</title>
+  <link rel="stylesheet" href="style/base.css">
+  <link rel="stylesheet" href="style/admin.css">
+</head>
+<body>
+
+  <div class="admin-layout">
+
+    <aside class="admin-sidebar">
+      <div class="admin-logo">Cine<span>Verse</span> <span class="admin-badge">ADMIN</span></div>
+      <div class="admin-user">
+        <div class="admin-avatar">A</div>
+        <div><div style="font-weight:600;font-size:14px">Quản Trị Viên</div><div style="font-size:12px;color:var(--gold)">Super Admin</div></div>
+      </div>
+      <div class="admin-nav-group">Báo Cáo & Thống Kê</div>
+      <a href="admin-dashboard.html" class="admin-nav-link"><span>📊</span> Tổng Quan</a>
+      <div class="admin-nav-group">Quản Lý Danh Mục</div>
+      <a href="admin-movies.html" class="admin-nav-link"><span>🎬</span> Quản Lý Phim</a>
+      <a href="admin-showtimes.html" class="admin-nav-link active"><span>📅</span> Lịch Chiếu</a>
+      <a href="admin-rooms.html" class="admin-nav-link"><span>🏛️</span> Phòng & Sơ Đồ Ghế</a>
+      <a href="admin-fnb.html" class="admin-nav-link"><span>🍿</span> Menu Bắp Nước</a>
+      <a href="admin-vouchers.html" class="admin-nav-link"><span>🎟️</span> Mã Giảm Giá</a>
+      <a href="admin-users.html" class="admin-nav-link"><span>👥</span> Tài Khoản & Staff</a>
+      <a href="index.html" class="admin-nav-link" style="margin-top:auto"><span>🌐</span> Xem Trang Chủ</a>
+      <button class="btn btn--danger btn--full" style="margin-top:10px" onclick="logoutAdmin()">🚪 Đăng Xuất</button>
+    </aside>
+
+    <main class="admin-main">
+      <div class="admin-header">
+        <div>
+          <h1 class="admin-title">Quản Lý Lịch Chiếu & Suất Chiếu</h1>
+          <div class="admin-subtitle">Sắp xếp khung giờ chiếu theo phòng chiếu và tránh trùng giờ</div>
+        </div>
+        <button class="btn btn--primary" onclick="openAddShowtimeModal()">+ Tạo Suất Chiếu Mới</button>
+      </div>
+
+      <div class="card">
+        <div class="card__header" style="display:flex;gap:12px">
+          <input class="form-input" type="date" value="2025-03-12" style="max-width:180px">
+          <select class="form-select" style="max-width:200px">
+            <option>Tất cả phòng chiếu</option>
+            <option>Phòng 1 – Standard</option>
+            <option>Phòng 2 – IMAX 3D</option>
+          </select>
+        </div>
+        <div class="card__body">
+          <table class="table">
+            <thead>
+              <tr><th>Phim</th><th>Phòng Chiếu</th><th>Ngày Chiếu</th><th>Giờ Chiếu</th><th>Giá Vé Chuẩn</th><th>Trạng Thái</th><th>Hành Động</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>Inception 2</strong></td><td>Phòng 2 – IMAX 3D</td><td>12/03/2025</td><td>19:00 - 21:28</td><td>150,000đ</td><td><span class="badge badge--success">Đang mở bán</span></td><td><button class="btn btn--ghost" style="padding:4px 10px;font-size:12px">✏️ Sửa</button></td></tr>
+              <tr><td><strong>Avengers: Endgame 2</strong></td><td>Phòng 1 – Standard</td><td>12/03/2025</td><td>21:30 - 00:35</td><td>100,000đ</td><td><span class="badge badge--success">Đang mở bán</span></td><td><button class="btn btn--ghost" style="padding:4px 10px;font-size:12px">✏️ Sửa</button></td></tr>
+              <tr><td><strong>Dune: Part Three</strong></td><td>Phòng 4 – VIP</td><td>13/03/2025</td><td>16:30 - 19:15</td><td>200,000đ</td><td><span class="badge badge--warning">Sắp hết ghế</span></td><td><button class="btn btn--ghost" style="padding:4px 10px;font-size:12px">✏️ Sửa</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+
+  </div>
+
+  <script src="script/api.js"></script>
+  <script src="script/shared.js"></script>
+  <script src="script/admin-showtimes.js"></script>
+</body>
+</html>

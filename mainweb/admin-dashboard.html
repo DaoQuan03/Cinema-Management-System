@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard – Tổng Quan | CineVerse</title>
+  <link rel="stylesheet" href="style/base.css">
+  <link rel="stylesheet" href="style/auth-profile.css">
+  <link rel="stylesheet" href="style/admin.css">
+</head>
+<body>
+
+  <div class="admin-layout">
+
+    <!-- ADMIN SIDEBAR -->
+    <aside class="admin-sidebar">
+      <div class="admin-logo">
+        Cine<span>Verse</span>
+        <span class="admin-badge">ADMIN</span>
+      </div>
+
+      <div class="admin-user">
+        <div class="admin-avatar">A</div>
+        <div>
+          <div style="font-weight:600;font-size:14px">Quản Trị Viên</div>
+          <div style="font-size:12px;color:var(--gold)">Super Admin</div>
+        </div>
+      </div>
+
+      <div class="admin-nav-group">Báo Cáo & Thống Kê</div>
+      <a href="admin-dashboard.html" class="admin-nav-link active"><span>📊</span> Tổng Quan</a>
+
+      <div class="admin-nav-group">Quản Lý Danh Mục</div>
+      <a href="admin-movies.html" class="admin-nav-link"><span>🎬</span> Quản Lý Phim</a>
+      <a href="admin-showtimes.html" class="admin-nav-link"><span>📅</span> Lịch Chiếu</a>
+      <a href="admin-rooms.html" class="admin-nav-link"><span>🏛️</span> Phòng & Sơ Đồ Ghế</a>
+      <a href="admin-fnb.html" class="admin-nav-link"><span>🍿</span> Menu Bắp Nước</a>
+      <a href="admin-vouchers.html" class="admin-nav-link"><span>🎟️</span> Mã Giảm Giá</a>
+      <a href="admin-users.html" class="admin-nav-link"><span>👥</span> Tài Khoản & Staff</a>
+
+      <a href="index.html" class="admin-nav-link" style="margin-top:auto"><span>🌐</span> Xem Trang Chủ</a>
+      <button class="btn btn--danger btn--full" style="margin-top:10px" onclick="logoutAdmin()">🚪 Đăng Xuất</button>
+    </aside>
+
+    <!-- ADMIN MAIN -->
+    <main class="admin-main">
+      <div class="admin-header">
+        <div>
+          <h1 class="admin-title">Tổng Quan Báo Cáo & Thống Kê</h1>
+          <div class="admin-subtitle">Báo cáo chỉ số hoạt động toàn hệ thống rạp CineVerse</div>
+        </div>
+      </div>
+
+      <!-- STATS GRID -->
+      <div class="admin-stats-grid">
+        <div class="admin-stat-card">
+          <div class="admin-stat-icon">💰</div>
+          <div class="admin-stat-val">2.4 Tỷ</div>
+          <div class="admin-stat-lbl">Doanh Thu Tháng Này</div>
+        </div>
+        <div class="admin-stat-card">
+          <div class="admin-stat-icon">🎟️</div>
+          <div class="admin-stat-val">18,432</div>
+          <div class="admin-stat-lbl">Tổng Vé Đã Bán</div>
+        </div>
+        <div class="admin-stat-card">
+          <div class="admin-stat-icon">🎬</div>
+          <div class="admin-stat-val">12</div>
+          <div class="admin-stat-lbl">Phim Đang Chiếu</div>
+        </div>
+        <div class="admin-stat-card">
+          <div class="admin-stat-icon">👥</div>
+          <div class="admin-stat-val">1,250</div>
+          <div class="admin-stat-lbl">Thành Viên Đăng Ký</div>
+        </div>
+      </div>
+
+      <!-- REVENUE CHART CARD -->
+      <div class="card" style="margin-bottom:24px">
+        <div class="card__header">
+          <div class="card__title">Doanh Thu 6 Tháng Gần Nhất</div>
+        </div>
+        <div class="revenue-chart" id="adminRevenueChart" style="padding:24px 20px 10px"></div>
+        <div style="display:flex;justify-content:center;gap:28px;padding:8px 20px 20px;font-size:12px;color:var(--muted)">
+          <span>Tháng 10</span><span>Tháng 11</span><span>Tháng 12</span><span>Tháng 1</span><span>Tháng 2</span><span>Tháng 3</span>
+        </div>
+      </div>
+
+      <!-- TOP MOVIES TABLE -->
+      <div class="card">
+        <div class="card__header">
+          <div class="card__title">Top Phim Doanh Thu Cao Nhất</div>
+        </div>
+        <div class="card__body">
+          <table class="table">
+            <thead>
+              <tr><th>Phim</th><th>Thể Loai</th><th>Vé Bán</th><th>Doanh Thu</th><th>Tỷ Lệ Lấp Đầy</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>Inception 2</strong></td><td>Khoa học viễn tưởng</td><td>4,821</td><td>628,000,000đ</td><td><span class="badge badge--success">88%</span></td></tr>
+              <tr><td><strong>Avengers: Endgame 2</strong></td><td>Hành động</td><td>3,940</td><td>513,000,000đ</td><td><span class="badge badge--success">82%</span></td></tr>
+              <tr><td><strong>Dune: Part Three</strong></td><td>Khoa học viễn tưởng</td><td>2,810</td><td>365,000,000đ</td><td><span class="badge badge--blue">75%</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </main>
+
+  </div>
+
+  <script src="script/api.js"></script>
+  <script src="script/shared.js"></script>
+  <script src="script/admin-dashboard.js"></script>
+</body>
+</html>

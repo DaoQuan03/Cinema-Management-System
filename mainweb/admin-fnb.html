@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin – Menu Bắp Nước (F&B) | CineVerse</title>
+  <link rel="stylesheet" href="style/base.css">
+  <link rel="stylesheet" href="style/admin.css">
+</head>
+<body>
+
+  <div class="admin-layout">
+
+    <aside class="admin-sidebar">
+      <div class="admin-logo">Cine<span>Verse</span> <span class="admin-badge">ADMIN</span></div>
+      <div class="admin-user">
+        <div class="admin-avatar">A</div>
+        <div><div style="font-weight:600;font-size:14px">Quản Trị Viên</div><div style="font-size:12px;color:var(--gold)">Super Admin</div></div>
+      </div>
+      <div class="admin-nav-group">Báo Cáo & Thống Kê</div>
+      <a href="admin-dashboard.html" class="admin-nav-link"><span>📊</span> Tổng Quan</a>
+      <div class="admin-nav-group">Quản Lý Danh Mục</div>
+      <a href="admin-movies.html" class="admin-nav-link"><span>🎬</span> Quản Lý Phim</a>
+      <a href="admin-showtimes.html" class="admin-nav-link"><span>📅</span> Lịch Chiếu</a>
+      <a href="admin-rooms.html" class="admin-nav-link"><span>🏛️</span> Phòng & Sơ Đồ Ghế</a>
+      <a href="admin-fnb.html" class="admin-nav-link active"><span>🍿</span> Menu Bắp Nước</a>
+      <a href="admin-vouchers.html" class="admin-nav-link"><span>🎟️</span> Mã Giảm Giá</a>
+      <a href="admin-users.html" class="admin-nav-link"><span>👥</span> Tài Khoản & Staff</a>
+      <a href="index.html" class="admin-nav-link" style="margin-top:auto"><span>🌐</span> Xem Trang Chủ</a>
+      <button class="btn btn--danger btn--full" style="margin-top:10px" onclick="logoutAdmin()">🚪 Đăng Xuất</button>
+    </aside>
+
+    <main class="admin-main">
+      <div class="admin-header">
+        <div>
+          <h1 class="admin-title">Quản Lý Menu Bắp Nước & Tồn Kho (F&B)</h1>
+          <div class="admin-subtitle">Thêm mới, sửa giá và quản lý kho sản phẩm bắp nước bán kèm</div>
+        </div>
+        <button class="btn btn--primary" onclick="showToast('Mở form thêm món mới...', 'success')">+ Thêm Sản Phẩm Mới</button>
+      </div>
+
+      <div class="card">
+        <div class="card__body">
+          <table class="table">
+            <thead>
+              <tr><th>Sản Phẩm / Combo</th><th>Loại</th><th>Giá Bán</th><th>Tồn Kho</th><th>Trạng Thái</th><th>Hành Động</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>Combo Popcorn Single</strong> (1 Bắp ngọt lớn + 1 Pepsi)</td><td>Combo Bắp Nước</td><td>75,000đ</td><td>450 phần</td><td><span class="badge badge--success">Đang bán</span></td><td><button class="btn btn--ghost" style="padding:4px 10px;font-size:12px">✏️ Sửa</button></td></tr>
+              <tr><td><strong>Combo Bắp + 2 Pepsi</strong> (1 Bắp lớn + 2 Pepsi)</td><td>Combo Đôi</td><td>105,000đ</td><td>320 phần</td><td><span class="badge badge--success">Đang bán</span></td><td><button class="btn btn--ghost" style="padding:4px 10px;font-size:12px">✏️ Sửa</button></td></tr>
+              <tr><td><strong>Combo Family Party</strong> (2 Bắp lớn + 4 Pepsi + Snack)</td><td>Combo Gia Đình</td><td>185,000đ</td><td>120 phần</td><td><span class="badge badge--success">Đang bán</span></td><td><button class="btn btn--ghost" style="padding:4px 10px;font-size:12px">✏️ Sửa</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+
+  </div>
+
+  <script src="script/api.js"></script>
+  <script src="script/shared.js"></script>
+  <script>
+    function logoutAdmin(){ localStorage.removeItem('cineverse_user'); window.location.href='auth.html'; }
+  </script>
+</body>
+</html>

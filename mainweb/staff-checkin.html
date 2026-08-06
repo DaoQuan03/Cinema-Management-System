@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Staff Check-in – Soát Vé QR | CineVerse</title>
+  <link rel="stylesheet" href="style/base.css">
+  <link rel="stylesheet" href="style/staff.css">
+</head>
+<body>
+
+  <div class="staff-layout">
+
+    <!-- STAFF SIDEBAR -->
+    <aside class="staff-sidebar">
+      <a href="index.html" class="staff-sidebar__logo">
+        Cine<span>Verse</span>
+      </a>
+
+      <div class="staff-user-card">
+        <div class="staff-avatar">S</div>
+        <div>
+          <div class="staff-user-name">Nhân Viên Soát Vé</div>
+          <div class="staff-user-role">CineVerse Q.1</div>
+        </div>
+      </div>
+
+      <nav class="staff-nav">
+        <a href="staff-pos.html" class="staff-nav-item">
+          <span>🖥️</span> Bán Vé POS
+        </a>
+        <a href="staff-checkin.html" class="staff-nav-item active">
+          <span>📷</span> Soát Vé QR
+        </a>
+        <a href="index.html" class="staff-nav-item" style="margin-top:auto">
+          <span>🌐</span> Xem Trang Chủ
+        </a>
+        <button class="btn btn--danger btn--full" style="margin-top:10px" onclick="logoutStaff()">
+          🚪 Đăng Xuất
+        </button>
+      </nav>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="staff-main">
+      <div class="staff-topbar">
+        <div>
+          <h1 class="staff-topbar__title">Quét Mã QR & Soát Vé Phòng Chiếu</h1>
+          <p style="color:var(--muted);font-size:13px;margin-top:4px">Quét mã QR từ điện thoại/vé cứng của khách hàng để xác nhận vào phòng</p>
+        </div>
+      </div>
+
+      <div class="scanner-card">
+        <div class="scanner-cam-placeholder">
+          📷
+          <span style="font-size:13px;color:var(--muted);margin-top:10px">Sẵn sàng quét mã QR...</span>
+        </div>
+
+        <div style="margin-top:20px">
+          <label class="form-label">Hoặc nhập mã vé thủ công</label>
+          <div style="display:flex;gap:10px;max-width:400px;margin:0 auto">
+            <input class="form-input" id="checkinCode" type="text" placeholder="CVE-2025-XXXXX" style="text-align:center;font-weight:700;letter-spacing:2px">
+            <button class="btn btn--primary" onclick="verifyTicketCheckin()">✓ Quét</button>
+          </div>
+        </div>
+
+        <div id="checkinResult" style="margin-top:24px;display:none">
+          <!-- Rendered by JS -->
+        </div>
+      </div>
+    </main>
+
+  </div>
+
+  <script src="script/api.js"></script>
+  <script src="script/shared.js"></script>
+  <script src="script/staff-checkin.js"></script>
+</body>
+</html>

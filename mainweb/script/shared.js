@@ -21,7 +21,37 @@ const MOVIES = [
 /* Save to localStorage for cross-page access */
 localStorage.setItem('cineverse_movies', JSON.stringify(MOVIES));
 
-/* ── Get movies from storage ───────────────────────────────── */
+/* ── Get movies from Django Backend REST API with local fallback ─ */
+async function getMoviesAsync(params = {}) {
+  try {
+    if (window.ApiClient) {
+      const data = await ApiClient.getMovies(params);
+      if (Array.isArray(data) && data.length > 0) {
+        return data.map(m => ({
+          id: m.id,
+          title: m.title,
+          genre: m.genre,
+          genreLabel: m.genre,
+          rating: m.rating || 8.0,
+          duration: `${Math.floor((m.duration_mins || 120) / 60)}h ${(m.duration_mins || 120) % 60}m`,
+          durationMins: m.duration_mins || 120,
+          badge: m.rating >= 9.0 ? 'HOT' : (m.status === 'UPCOMING' ? 'NEW' : ''),
+          tab: m.status === 'SHOWING' ? 'showing' : (m.status === 'UPCOMING' ? 'upcoming' : 'special'),
+          poster: m.poster_url || 'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=400&q=80',
+          director: m.director || 'N/A',
+          cast: m.cast ? m.cast.split(', ') : [],
+          desc: m.description || '',
+          rated: 'C13',
+          lang: 'Tiếng Anh',
+        }));
+      }
+    }
+  } catch (err) {
+    console.warn('[CineVerse] Django API offline, using local fallback:', err);
+  }
+  return getMovies();
+}
+
 function getMovies() {
   try {
     return JSON.parse(localStorage.getItem('cineverse_movies')) || MOVIES;
@@ -116,8 +146,40 @@ function getParam(key) {
   return new URLSearchParams(location.search).get(key);
 }
 
+/* ── Update Navbar Auth Status ──────────────────────────────── */
+function updateNavbarAuth() {
+  const actions = document.querySelector('.nav__actions');
+  if (!actions) return;
+  const user = getCurrentUser();
+
+  if (user && user.name) {
+    const initial = user.name[0].toUpperCase();
+    actions.innerHTML = `
+      <a href="profile.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--text);font-weight:600;font-size:14px">
+        <div style="width:34px;height:34px;border-radius:50%;background:var(--gold);color:var(--dark);display:flex;align-items:center;justify-content:center;font-weight:700">${initial}</div>
+        <span>${user.name}</span>
+      </a>
+      <button onclick="logoutUserNav()" class="btn btn--outline" style="padding:6px 12px;font-size:12px">Đăng Xuất</button>
+    `;
+  } else {
+    actions.innerHTML = `
+      <a href="auth.html" class="btn btn--outline">Đăng Nhập</a>
+      <a href="auth.html?mode=register" class="btn btn--primary">Đăng Ký</a>
+    `;
+  }
+}
+
+function logoutUserNav() {
+  localStorage.removeItem('cineverse_user');
+  localStorage.removeItem('cineverse_auth_token');
+  showToast('Đã đăng xuất tài khoản', 'info');
+  setTimeout(() => { location.reload(); }, 600);
+}
+
 /* ── Run on DOM ready ──────────────────────────────────────── */
 document.addEventListener('DOMContentLoaded', () => {
   initReveal();
   initStickyNav();
+  updateNavbarAuth();
 });
+

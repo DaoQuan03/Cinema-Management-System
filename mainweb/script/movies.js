@@ -44,11 +44,12 @@ function switchTab(tab, triggerEl) {
 }
 
 /* ── Filter + sort + render ──────────────────────────── */
-function filterMovies() {
+async function filterMovies() {
   const q    = (document.getElementById('searchInput')?.value || '').toLowerCase();
   const sort = document.getElementById('sortSelect')?.value || 'rating';
 
-  let filtered = getMovies().filter(m => m.tab === currentTab);
+  const allMovies = await getMoviesAsync();
+  let filtered = allMovies.filter(m => m.tab === currentTab);
 
   if (q) {
     filtered = filtered.filter(m =>

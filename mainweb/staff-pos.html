@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Staff POS – Bán Vé Tại Quầy | CineVerse</title>
+  <link rel="stylesheet" href="style/base.css">
+  <link rel="stylesheet" href="style/booking.css">
+  <link rel="stylesheet" href="style/staff.css">
+</head>
+<body>
+
+  <div class="staff-layout">
+
+    <!-- STAFF SIDEBAR -->
+    <aside class="staff-sidebar">
+      <a href="index.html" class="staff-sidebar__logo">
+        Cine<span>Verse</span>
+      </a>
+
+      <div class="staff-user-card">
+        <div class="staff-avatar" id="staffAvatar">S</div>
+        <div>
+          <div class="staff-user-name" id="staffName">Nhân Viên Quầy</div>
+          <div class="staff-user-role">CineVerse Q.1</div>
+        </div>
+      </div>
+
+      <nav class="staff-nav">
+        <a href="staff-pos.html" class="staff-nav-item active">
+          <span>🖥️</span> Bán Vé POS
+        </a>
+        <a href="staff-checkin.html" class="staff-nav-item">
+          <span>📷</span> Soát Vé QR
+        </a>
+        <a href="index.html" class="staff-nav-item" style="margin-top:auto">
+          <span>🌐</span> Xem Trang Chủ
+        </a>
+        <button class="btn btn--danger btn--full" style="margin-top:10px" onclick="logoutStaff()">
+          🚪 Đăng Xuất
+        </button>
+      </nav>
+    </aside>
+
+    <!-- STAFF MAIN CONTENT -->
+    <main class="staff-main">
+
+      <div class="staff-topbar">
+        <div>
+          <h1 class="staff-topbar__title">Point of Sale (POS) – Bán Vé Tại Quầy</h1>
+          <p style="color:var(--muted);font-size:13px;margin-top:4px">Chọn phim, suất chiếu, ghế và combo bắp nước để xuất vé cho khách vãng lai</p>
+        </div>
+        <div class="staff-topbar__cinema" id="currentCinema">📍 Rạp: CineVerse Q.1 - TP.HCM</div>
+      </div>
+
+      <div class="pos-grid">
+
+        <!-- LEFT: SELECTION STEPS -->
+        <div>
+
+          <!-- STEP 1: Select Movie -->
+          <div class="pos-step-box">
+            <div class="pos-step-title">
+              <span class="pos-step-num">1</span> Chọn Phim
+            </div>
+            <div class="pos-movie-scroll" id="posMovieList">
+              <!-- Rendered by JS -->
+            </div>
+          </div>
+
+          <!-- STEP 2: Select Showtime & Room -->
+          <div class="pos-step-box">
+            <div class="pos-step-title">
+              <span class="pos-step-num">2</span> Chọn Suất Chiếu & Ngày
+            </div>
+            <div style="display:flex;gap:12px;margin-bottom:12px">
+              <select class="form-select" id="posDateSelect" style="max-width:180px" onchange="loadPosShowtimes()">
+                <option value="2025-03-10">Thứ 2, 10/03</option>
+                <option value="2025-03-11">Thứ 3, 11/03</option>
+                <option value="2025-03-12">Thứ 4, 12/03</option>
+              </select>
+            </div>
+            <div class="showtime-grid" id="posShowtimeGrid">
+              <!-- Rendered by JS -->
+            </div>
+          </div>
+
+          <!-- STEP 3: Select Seats -->
+          <div class="pos-step-box" id="posSeatBox" style="display:none">
+            <div class="pos-step-title">
+              <span class="pos-step-num">3</span> Chọn Ghế Ngồi (Phòng: <span id="posRoomName">Phòng 1</span>)
+            </div>
+            <div class="screen-wrap" style="margin-bottom:14px">
+              <div class="screen-bar"></div>
+              <div class="screen-label">MÀN HÌNH</div>
+            </div>
+            <div class="seat-grid" id="posSeatGrid">
+              <!-- Rendered by JS -->
+            </div>
+          </div>
+
+          <!-- STEP 4: Select F&B Combos -->
+          <div class="pos-step-box">
+            <div class="pos-step-title">
+              <span class="pos-step-num">4</span> Chọn Combo Bắp Nước (F&B)
+            </div>
+            <div class="fnb-grid" id="posFnbGrid">
+              <!-- Rendered by JS -->
+            </div>
+          </div>
+
+        </div>
+
+        <!-- RIGHT: RECEIPT / ORDER SUMMARY -->
+        <div>
+          <div class="pos-receipt">
+            <div class="pos-receipt-title">🧾 Hóa Đơn Bán Vé</div>
+
+            <div class="form-group">
+              <label class="form-label">Khách Hàng (Không bắt buộc)</label>
+              <input class="form-input" id="custName" type="text" placeholder="Tên khách vãng lai">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Số Điện Thoại Khách</label>
+              <input class="form-input" id="custPhone" type="tel" placeholder="0901 234 567">
+            </div>
+
+            <div class="divider"></div>
+
+            <div style="font-size:13px;color:var(--muted);margin-bottom:6px">Phim đã chọn:</div>
+            <div style="font-weight:700;font-size:16px;color:var(--gold)" id="receiptMovie">Chưa chọn phim</div>
+
+            <div style="font-size:13px;color:var(--muted);margin-top:10px">Suất chiếu & Ghế:</div>
+            <div style="font-size:14px;font-weight:600" id="receiptShowtime">--:--</div>
+            <div style="font-size:14px;color:var(--gold);margin-top:4px" id="receiptSeats">Chưa chọn ghế</div>
+
+            <div class="divider"></div>
+
+            <div style="font-size:13px;color:var(--muted);margin-bottom:6px">Combo Bắp nước:</div>
+            <div id="receiptFnb" style="font-size:13px;color:var(--text)">Chưa chọn</div>
+
+            <div class="divider"></div>
+
+            <div class="order-row order-row--total">
+              <span>Tổng Tiền Bán:</span>
+              <span id="posTotal" style="color:var(--gold);font-size:22px;font-weight:700">0đ</span>
+            </div>
+
+            <div class="form-group" style="margin-top:16px">
+              <label class="form-label">Phương Thức Thanh Toán</label>
+              <select class="form-select" id="posPayment">
+                <option value="counter">💵 Tiền Mặt Tại Quầy</option>
+                <option value="momo">📱 Ví MoMo QR</option>
+                <option value="vnpay">💳 Thẻ / VNPay</option>
+              </select>
+            </div>
+
+            <button class="btn btn--hero btn--full" style="margin-top:12px" onclick="processPosCheckout()">
+              🖨️ Xuất Vé & In Hóa Đơn
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+    </main>
+
+  </div>
+
+  <script src="script/api.js"></script>
+  <script src="script/shared.js"></script>
+  <script src="script/staff-pos.js"></script>
+</body>
+</html>

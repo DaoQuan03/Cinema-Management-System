@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin – Quản Lý Phim | CineVerse</title>
+  <link rel="stylesheet" href="style/base.css">
+  <link rel="stylesheet" href="style/admin.css">
+</head>
+<body>
+
+  <div class="admin-layout">
+
+    <aside class="admin-sidebar">
+      <div class="admin-logo">Cine<span>Verse</span> <span class="admin-badge">ADMIN</span></div>
+      <div class="admin-user">
+        <div class="admin-avatar">A</div>
+        <div>
+          <div style="font-weight:600;font-size:14px">Quản Trị Viên</div>
+          <div style="font-size:12px;color:var(--gold)">Super Admin</div>
+        </div>
+      </div>
+      <div class="admin-nav-group">Báo Cáo & Thống Kê</div>
+      <a href="admin-dashboard.html" class="admin-nav-link"><span>📊</span> Tổng Quan</a>
+      <div class="admin-nav-group">Quản Lý Danh Mục</div>
+      <a href="admin-movies.html" class="admin-nav-link active"><span>🎬</span> Quản Lý Phim</a>
+      <a href="admin-showtimes.html" class="admin-nav-link"><span>📅</span> Lịch Chiếu</a>
+      <a href="admin-rooms.html" class="admin-nav-link"><span>🏛️</span> Phòng & Sơ Đồ Ghế</a>
+      <a href="admin-fnb.html" class="admin-nav-link"><span>🍿</span> Menu Bắp Nước</a>
+      <a href="admin-vouchers.html" class="admin-nav-link"><span>🎟️</span> Mã Giảm Giá</a>
+      <a href="admin-users.html" class="admin-nav-link"><span>👥</span> Tài Khoản & Staff</a>
+      <a href="index.html" class="admin-nav-link" style="margin-top:auto"><span>🌐</span> Xem Trang Chủ</a>
+      <button class="btn btn--danger btn--full" style="margin-top:10px" onclick="logoutAdmin()">🚪 Đăng Xuất</button>
+    </aside>
+
+    <main class="admin-main">
+      <div class="admin-header">
+        <div>
+          <h1 class="admin-title">Quản Lý Danh Mục Phim</h1>
+          <div class="admin-subtitle">Thêm mới, chỉnh sửa thông tin hoặc ngưng chiếu các bộ phim</div>
+        </div>
+        <button class="btn btn--primary" onclick="openAddMovieModal()">+ Thêm Phim Mới</button>
+      </div>
+
+      <div class="card">
+        <div class="card__header">
+          <input class="form-input" id="movieSearch" type="text" placeholder="🔍 Tìm kiếm phim..." style="max-width:300px" oninput="renderAdminMovies()">
+        </div>
+        <div class="card__body">
+          <table class="table">
+            <thead>
+              <tr><th>Poster</th><th>Tên Phim</th><th>Thể Loại</th><th>Thời Lượng</th><th>Đánh Giá</th><th>Trạng Thái</th><th>Hành Động</th></tr>
+            </thead>
+            <tbody id="adminMoviesTable">
+              <!-- Rendered by JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+
+  </div>
+
+  <!-- ADD/EDIT MOVIE MODAL -->
+  <div class="admin-modal-overlay" id="movieModal">
+    <div class="admin-modal">
+      <div class="admin-modal-header">
+        <div class="admin-modal-title" id="modalMovieTitle">Thêm Phim Mới</div>
+        <button class="admin-modal-close" onclick="closeMovieModal()">✕</button>
+      </div>
+      <div class="admin-modal-body">
+        <form id="movieForm" onsubmit="saveMovie(event)">
+          <div class="admin-form-grid">
+            <div class="form-group">
+              <label class="form-label">Tên Phim</label>
+              <input class="form-input" id="mTitle" type="text" required placeholder="VD: Avatar 3">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Thể Loại</label>
+              <select class="form-select" id="mGenre">
+                <option value="scifi">Khoa học viễn tưởng</option>
+                <option value="action">Hành động</option>
+                <option value="romance">Tình cảm</option>
+                <option value="horror">Kinh dị</option>
+                <option value="comedy">Hài hước</option>
+                <option value="animation">Hoạt hình</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Thời Lượng (Phút)</label>
+              <input class="form-input" id="mDuration" type="number" required placeholder="148">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Đạo Diễn</label>
+              <input class="form-input" id="mDirector" type="text" placeholder="Christopher Nolan">
+            </div>
+            <div class="form-group form-group--full">
+              <label class="form-label">URL Poster Phim</label>
+              <input class="form-input" id="mPoster" type="text" placeholder="https://images.unsplash.com/...">
+            </div>
+            <div class="form-group form-group--full">
+              <label class="form-label">Mô Tả Nội Dung</label>
+              <textarea class="form-textarea" id="mDesc" rows="3" placeholder="Tóm tắt nội dung phim..."></textarea>
+            </div>
+          </div>
+          <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:20px">
+            <button type="button" class="btn btn--ghost" onclick="closeMovieModal()">Hủy</button>
+            <button type="submit" class="btn btn--primary">Lưu Phim</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script src="script/api.js"></script>
+  <script src="script/shared.js"></script>
+  <script src="script/admin-movies.js"></script>
+</body>
+</html>

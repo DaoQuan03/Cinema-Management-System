@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin – Quản Lý Tài Khoản & Staff | CineVerse</title>
+  <link rel="stylesheet" href="style/base.css">
+  <link rel="stylesheet" href="style/admin.css">
+</head>
+<body>
+
+  <div class="admin-layout">
+
+    <aside class="admin-sidebar">
+      <div class="admin-logo">Cine<span>Verse</span> <span class="admin-badge">ADMIN</span></div>
+      <div class="admin-user">
+        <div class="admin-avatar">A</div>
+        <div><div style="font-weight:600;font-size:14px">Quản Trị Viên</div><div style="font-size:12px;color:var(--gold)">Super Admin</div></div>
+      </div>
+      <div class="admin-nav-group">Báo Cáo & Thống Kê</div>
+      <a href="admin-dashboard.html" class="admin-nav-link"><span>📊</span> Tổng Quan</a>
+      <div class="admin-nav-group">Quản Lý Danh Mục</div>
+      <a href="admin-movies.html" class="admin-nav-link"><span>🎬</span> Quản Lý Phim</a>
+      <a href="admin-showtimes.html" class="admin-nav-link"><span>📅</span> Lịch Chiếu</a>
+      <a href="admin-rooms.html" class="admin-nav-link"><span>🏛️</span> Phòng & Sơ Đồ Ghế</a>
+      <a href="admin-fnb.html" class="admin-nav-link"><span>🍿</span> Menu Bắp Nước</a>
+      <a href="admin-vouchers.html" class="admin-nav-link"><span>🎟️</span> Mã Giảm Giá</a>
+      <a href="admin-users.html" class="admin-nav-link active"><span>👥</span> Tài Khoản & Staff</a>
+      <a href="index.html" class="admin-nav-link" style="margin-top:auto"><span>🌐</span> Xem Trang Chủ</a>
+      <button class="btn btn--danger btn--full" style="margin-top:10px" onclick="logoutAdmin()">🚪 Đăng Xuất</button>
+    </aside>
+
+    <main class="admin-main">
+      <div class="admin-header">
+        <div>
+          <h1 class="admin-title">Quản Lý Tài Khoản & Phân Quyền Nhân Viên</h1>
+          <div class="admin-subtitle">Cấp tài khoản Nhân viên (Staff/Manager), đổi vai trò hoặc khóa tài khoản</div>
+        </div>
+        <button class="btn btn--primary" onclick="showToast('Mở form cấp tài khoản nhân viên...', 'success')">+ Cấp Tài Khoản Nhân Viên</button>
+      </div>
+
+      <div class="card">
+        <div class="card__body">
+          <table class="table">
+            <thead>
+              <tr><th>Họ & Tên</th><th>Email</th><th>Vai Trò (Role)</th><th>Chi Nhánh</th><th>Hạng Thẻ</th><th>Trạng Thái</th><th>Hành Động</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>Nguyễn Văn An</strong></td><td>user@example.com</td><td><span class="badge badge--blue">Khách hàng</span></td><td>--</td><td><span style="color:var(--gold)">Gold (350 điểm)</span></td><td><span class="badge badge--success">Hoạt động</span></td><td><button class="btn btn--ghost" style="padding:4px 10px;font-size:12px">✏️ Quyền</button></td></tr>
+              <tr><td><strong>Trần Văn Nam</strong></td><td>staff1@cineverse.com</td><td><span class="badge badge--gold">Nhân viên Quầy (Staff)</span></td><td>CineVerse Q.1</td><td>--</td><td><span class="badge badge--success">Hoạt động</span></td><td><button class="btn btn--ghost" style="padding:4px 10px;font-size:12px">✏️ Sửa</button></td></tr>
+              <tr><td><strong>Lê Thị Mai</strong></td><td>manager@cineverse.com</td><td><span class="badge badge--hot">Quản lý Chi nhánh</span></td><td>CineVerse Q.1</td><td>--</td><td><span class="badge badge--success">Hoạt động</span></td><td><button class="btn btn--ghost" style="padding:4px 10px;font-size:12px">✏️ Sửa</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+
+  </div>
+
+  <script src="script/api.js"></script>
+  <script src="script/shared.js"></script>
+  <script>
+    function logoutAdmin(){ localStorage.removeItem('cineverse_user'); window.location.href='auth.html'; }
+  </script>
+</body>
+</html>

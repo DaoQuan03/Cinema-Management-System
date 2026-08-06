@@ -70,7 +70,8 @@ function doLogin() {
     };
     setCurrentUser(user);
     showToast('✓ Đăng nhập thành công!', 'success');
-    setTimeout(() => { window.location.href = 'profile.html'; }, 1400);
+    const redirectUrl = getParam('redirect') || 'profile.html';
+    setTimeout(() => { window.location.href = redirectUrl; }, 1400);
   }, 1200);
 }
 
@@ -96,7 +97,8 @@ function doRegister() {
     const user = { name, email, role: selectedRole, token: 'jwt_' + Date.now() };
     setCurrentUser(user);
     showToast(`Đăng ký thành công, Chào mừng ${name}!`, 'success');
-    setTimeout(() => { window.location.href = 'profile.html'; }, 1400);
+    const redirectUrl = getParam('redirect') || 'profile.html';
+    setTimeout(() => { window.location.href = redirectUrl; }, 1400);
   }, 1500);
 }
 
@@ -111,7 +113,8 @@ function socialLogin(provider) {
     };
     setCurrentUser(user);
     showToast(`✓ Đăng nhập ${provider} thành công!`, 'success');
-    setTimeout(() => { window.location.href = 'profile.html'; }, 1400);
+    const redirectUrl = getParam('redirect') || 'profile.html';
+    setTimeout(() => { window.location.href = redirectUrl; }, 1400);
   }, 1500);
 }
 

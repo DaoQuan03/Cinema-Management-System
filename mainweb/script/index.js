@@ -37,12 +37,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const grid = document.getElementById('nowShowingGrid');
   if (grid) {
-    const movies = getMovies().slice(0, 8);
-    grid.innerHTML = movies.map(m => movieCardHTML(m)).join('');
-    document.querySelectorAll('#nowShowingGrid .movie-card').forEach(el => {
-      el.classList.add('reveal');
+    getMoviesAsync().then(allMovies => {
+      const movies = allMovies.slice(0, 8);
+      grid.innerHTML = movies.map(m => movieCardHTML(m)).join('');
+      document.querySelectorAll('#nowShowingGrid .movie-card').forEach(el => {
+        el.classList.add('reveal');
+      });
+      initReveal();
     });
-    initReveal();
   }
 
   /* ── Genre pills: mark active from URL ─────────────────── */
