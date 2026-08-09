@@ -4,8 +4,8 @@
 
 /* ── Constants ─────────────────────────────────────────────── */
 const SEAT_PRICES  = { standard: 100000, vip: 150000, sweetbox: 200000 };
-const BOOKED_SEATS = ['A2','A3','B5','B6','C1','C4','D3','D7','E2','E8','F5'];
-const LOCKED_SEATS = ['C5','C6','D5'];
+const BOOKED_SEATS = [];
+const LOCKED_SEATS = [];
 const SHOWTIMES    = ['09:15','11:30','14:00','16:30','19:00','21:30'];
 const HALLS        = ['P.1 – 4K','P.2 – IMAX','P.3 – Dolby','P.4 – VIP','P.5 – 4DX','P.2 – IMAX'];
 const CAST_AVATARS = [
@@ -149,7 +149,22 @@ function selectShowtime(el, time, hall) {
   document.getElementById('bookNowBtn').disabled = false;
 }
 
-/* ── Seat Modal ────────────────────────────────────────────── */
+/* ── Realtime & Queue Management (Socket.io Backend Port 4000) ── */
+const SOCKET_SERVER_URL = 'http://127.0.0.1:4000';
+let realtimePollInterval = null;
+let holdTimerInterval    = null;
+let holdRemainingSeconds = 300; // 5 minutes (300 seconds)
+
+function getClientId() {
+  let id = sessionStorage.getItem('cv_client_id');
+  if (!id) {
+    id = 'cli_' + Math.random().toString(36).substring(2, 9);
+    sessionStorage.setItem('cv_client_id', id);
+  }
+  return id;
+}
+
+/* ── Seat Modal Open / Close ───────────────────────────────── */
 function openSeatModal() {
   if (!selectedShow) {
     const first = document.querySelector('.showtime-btn');
@@ -158,19 +173,112 @@ function openSeatModal() {
   document.getElementById('modalInfo').textContent =
     `${movie.title} • ${selectedShow?.time || '19:00'} • ${selectedShow?.hall || 'Phòng 2'}`;
 
-  document.getElementById('seatModal').classList.add('open');
-  document.body.style.overflow = 'hidden';
-
   if (!document.getElementById('seatGrid').children.length) buildSeatGrid();
 
-  selectedSeats.clear();
-  updateOrderSummary();
-  startRealtimeSimulation();
+  // Start Realtime Session sync
+  syncRealtimeRoomState();
+  clearInterval(realtimePollInterval);
+  realtimePollInterval = setInterval(syncRealtimeRoomState, 1500);
 }
 
 function closeSeatModal() {
   document.getElementById('seatModal').classList.remove('open');
+  document.getElementById('waitingModal').classList.remove('open');
   document.body.style.overflow = '';
+  clearInterval(realtimePollInterval);
+
+  // Notify server of room exit
+  const clientId = getClientId();
+  fetch(`${SOCKET_SERVER_URL}/api/realtime/leave-room`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ showtimeId: '1', clientId }),
+  }).catch(() => {});
+}
+
+function closeWaitingModal() {
+  closeSeatModal();
+}
+
+/* ── Sync Room State from Socket Server ────────────────────── */
+async function syncRealtimeRoomState() {
+  const user     = getCurrentUser();
+  const userName = user?.name || 'Khách';
+  const clientId = getClientId();
+
+  try {
+    const res = await fetch(`${SOCKET_SERVER_URL}/api/realtime/room-state?showtimeId=1&clientId=${clientId}&userName=${encodeURIComponent(userName)}`);
+    if (!res.ok) return;
+    const data = await res.json();
+
+    // Check Capacity / Queue Status
+    if (data.status === 'queued') {
+      document.getElementById('seatModal').classList.remove('open');
+      document.getElementById('waitingModal').classList.add('open');
+      document.getElementById('queuePosText').textContent = `#${data.queuePosition || 1}`;
+      document.body.style.overflow = 'hidden';
+      return;
+    }
+
+    // Admitted to seat selection screen
+    document.getElementById('waitingModal').classList.remove('open');
+    document.getElementById('seatModal').classList.add('open');
+    document.body.style.overflow = 'hidden';
+
+    // Update Live Viewer Count
+    const vEl = document.getElementById('viewerCount');
+    if (vEl) vEl.textContent = data.activeViewerCount || 1;
+
+    // Update Seat States Realtime
+    updateSeatGridStates(data.seatStates || {}, data.expiredSeats || []);
+
+  } catch (err) {
+    console.warn('[Realtime Sync] Server connecting...', err);
+  }
+}
+
+/* ── Update Grid Seat Elements ────────────────────────────── */
+function updateSeatGridStates(seatStates, expiredSeats) {
+  const myClientId = getClientId();
+
+  // If my held seats expired from 5-minute timeout
+  expiredSeats.forEach(sid => {
+    if (selectedSeats.has(sid)) {
+      selectedSeats.delete(sid);
+      showToast(`⚠️ Ghế ${sid} đã hết 5 phút giữ chỗ và tự động bị hủy!`, 'warning');
+    }
+  });
+
+  document.querySelectorAll('.seat').forEach(seatEl => {
+    const sid = seatEl.dataset.id;
+    const state = seatStates[sid];
+
+    // Reset lock classes
+    seatEl.classList.remove('seat--locked-other');
+
+    if (state) {
+      if (state.status === 'booked') {
+        seatEl.classList.add('seat--booked');
+        seatEl.title = `${sid} (Đã mua)`;
+      } else if (state.status === 'locked') {
+        if (state.lockedBy === myClientId) {
+          // Seat locked by ME
+          seatEl.classList.add('seat--selected');
+          selectedSeats.add(sid);
+        } else {
+          // Seat locked by ANOTHER user
+          seatEl.classList.add('seat--locked-other');
+          seatEl.title = `${sid} (Đang được giữ bởi ${state.userName} - còn ${state.remainingSeconds}s)`;
+        }
+      }
+    } else {
+      if (!selectedSeats.has(sid)) {
+        seatEl.classList.remove('seat--selected', 'seat--booked');
+      }
+    }
+  });
+
+  updateOrderSummary();
 }
 
 /* ── Build seat grid ───────────────────────────────────────── */
@@ -193,14 +301,11 @@ function buildSeatGrid() {
     rowEl.innerHTML = `<div class="row-label">${row.label}</div>`;
 
     for (let i = 1; i <= row.count; i++) {
-      // Aisle gap in middle
       if (!row.paired && i === 6) {
         const gap = document.createElement('div');
         gap.className = 'seat-gap';
         rowEl.appendChild(gap);
       }
-
-      // For sweetbox: pair gap every 2 seats
       if (row.paired && i > 1 && i % 2 === 1) {
         const gap = document.createElement('div');
         gap.className = 'seat-gap';
@@ -214,35 +319,126 @@ function buildSeatGrid() {
       seat.dataset.type = row.type;
       seat.title        = seatId;
 
-      if (BOOKED_SEATS.includes(seatId)) {
-        seat.classList.add('seat--booked');
-      } else if (LOCKED_SEATS.includes(seatId)) {
-        seat.classList.add('seat--locked');
-      } else {
-        seat.addEventListener('click', () => toggleSeat(seat, seatId, row.type));
-      }
+      seat.addEventListener('click', () => toggleSeatRealtime(seat, seatId, row.type));
 
       rowEl.appendChild(seat);
     }
-
     grid.appendChild(rowEl);
   });
 }
 
-/* ── Toggle seat selection ─────────────────────────────────── */
-function toggleSeat(el, id, type) {
+/* ── Toggle Seat Realtime ──────────────────────────────────── */
+async function toggleSeatRealtime(el, id, type) {
+  if (el.classList.contains('seat--booked') || el.classList.contains('seat--locked-other')) {
+    showToast('Ghế này hiện không thể chọn!', 'warning');
+    return;
+  }
+
+  const clientId = getClientId();
+  const user = getCurrentUser();
+  const userName = user?.name || 'Khách';
+
   if (selectedSeats.has(id)) {
+    // Deselect Seat
     selectedSeats.delete(id);
     el.classList.remove('seat--selected');
+    fetch(`${SOCKET_SERVER_URL}/api/realtime/deselect-seat`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ showtimeId: '1', seatId: id, clientId }),
+    }).catch(() => {});
   } else {
+    // Select Seat
     if (selectedSeats.size >= 8) {
       showToast('Tối đa 8 ghế mỗi lần đặt!', 'warning');
       return;
     }
     selectedSeats.add(id);
     el.classList.add('seat--selected');
+
+    try {
+      const res = await fetch(`${SOCKET_SERVER_URL}/api/realtime/select-seat`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ showtimeId: '1', seatId: id, clientId, userName }),
+      });
+      const data = await res.json();
+      if (!data.success) {
+        selectedSeats.delete(id);
+        el.classList.remove('seat--selected');
+        showToast(data.message || 'Không thể chọn ghế này', 'warning');
+        return;
+      }
+    } catch (err) {
+      console.warn('Seat select error:', err);
+    }
   }
+
   updateOrderSummary();
+  manage5MinHoldTimer();
+}
+
+/* ── Manage 5-Minute Hold Timer ────────────────────────────── */
+function manage5MinHoldTimer() {
+  const timerBar = document.getElementById('holdTimerBar');
+
+  if (selectedSeats.size === 0) {
+    clearInterval(holdTimerInterval);
+    if (timerBar) timerBar.style.display = 'none';
+    localStorage.removeItem('cv_hold_start');
+    return;
+  }
+
+  if (timerBar) timerBar.style.display = 'flex';
+
+  if (!localStorage.getItem('cv_hold_start')) {
+    localStorage.setItem('cv_hold_start', Date.now());
+  }
+
+  clearInterval(holdTimerInterval);
+  holdTimerInterval = setInterval(updateTimerDisplay, 1000);
+  updateTimerDisplay();
+}
+
+function updateTimerDisplay() {
+  const start = parseInt(localStorage.getItem('cv_hold_start') || Date.now());
+  const elapsed = Math.floor((Date.now() - start) / 1000);
+  const remaining = Math.max(0, 300 - elapsed);
+
+  const displayEl = document.getElementById('timerDisplay');
+  const timerBar = document.getElementById('holdTimerBar');
+
+  const mins = String(Math.floor(remaining / 60)).padStart(2, '0');
+  const secs = String(remaining % 60).padStart(2, '0');
+
+  if (displayEl) displayEl.textContent = `${mins}:${secs}`;
+
+  if (timerBar) {
+    if (remaining < 60) timerBar.classList.add('urgent');
+    else timerBar.classList.remove('urgent');
+  }
+
+  // 5 Minutes Expired -> Cancel Transaction & Release Seats
+  if (remaining <= 0) {
+    clearInterval(holdTimerInterval);
+    const clientId = getClientId();
+
+    selectedSeats.forEach(sid => {
+      fetch(`${SOCKET_SERVER_URL}/api/realtime/deselect-seat`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ showtimeId: '1', seatId: sid, clientId }),
+      }).catch(() => {});
+    });
+
+    selectedSeats.clear();
+    localStorage.removeItem('cv_hold_start');
+    if (timerBar) timerBar.style.display = 'none';
+
+    document.querySelectorAll('.seat.seat--selected').forEach(s => s.classList.remove('seat--selected'));
+    updateOrderSummary();
+    showToast('⚠️ Hết 5 phút giữ ghế! Giao dịch của bạn đã tự động bị hủy.', 'warning');
+  }
 }
 
 /* ── Order summary ─────────────────────────────────────────── */
@@ -289,18 +485,6 @@ function updateOrderSummary() {
   }));
 }
 
-/* ── Realtime viewer simulation ────────────────────────────── */
-let realtimeInterval = null;
-function startRealtimeSimulation() {
-  clearInterval(realtimeInterval);
-  const counts = [3, 4, 2, 5, 3, 6, 2];
-  let i = 0;
-  realtimeInterval = setInterval(() => {
-    const el = document.getElementById('viewerCount');
-    if (el) el.textContent = counts[i++ % counts.length];
-  }, 3000);
-}
-
 /* ── Proceed to booking page ───────────────────────────────── */
 function proceedToBooking() {
   if (selectedSeats.size === 0) return;
@@ -336,3 +520,4 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 });
+

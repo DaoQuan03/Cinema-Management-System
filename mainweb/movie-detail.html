@@ -131,6 +131,12 @@
       </div>
       <div class="modal__body">
 
+        <!-- 5-Minute Hold Timer Bar -->
+        <div class="hold-timer-bar" id="holdTimerBar" style="display:none">
+          <span>⏱ Thời gian giữ ghế còn lại:</span>
+          <span class="timer-countdown" id="timerDisplay">05:00</span>
+        </div>
+
         <!-- Realtime badge -->
         <div class="realtime-badge">
           <div class="realtime-dot"></div>
@@ -155,10 +161,13 @@
             <div class="legend-swatch" style="background:#3A1020;border:1px solid #5A2030"></div>Sweetbox (200K)
           </div>
           <div class="legend-item">
-            <div class="legend-swatch" style="background:#1A1A2A;border:1px solid #2A2A3A;opacity:.5"></div>Đã Đặt
+            <div class="legend-swatch" style="background:#1A1A2A;border:1px solid #2A2A3A;opacity:.5"></div>Đã Mua
           </div>
           <div class="legend-item">
-            <div class="legend-swatch" style="background:#2A1A1A;border:1px solid #3A2A2A"></div>Đang Chọn
+            <div class="legend-swatch" style="background:#5A2A10;border:1px solid #E88830"></div>Đang Giữ (5ph)
+          </div>
+          <div class="legend-item">
+            <div class="legend-swatch" style="background:#4A90D9;border:1px solid #60A0E8"></div>Đã Chọn
           </div>
         </div>
 
@@ -194,6 +203,19 @@
         </button>
 
       </div>
+    </div>
+  </div>
+
+  <!-- WAITING ROOM MODAL (Capacity limit 100) -->
+  <div class="waiting-modal-overlay" id="waitingModal">
+    <div class="waiting-card">
+      <div class="waiting-spinner"></div>
+      <h3 style="font-family:'Playfair Display',serif;font-size:24px;margin-bottom:8px">Phòng Chiếu Đã Đạt Giới Hạn Tải</h3>
+      <p class="waiting-desc">Phòng chiếu đang phục vụ tối đa 100 người chọn ghế cùng lúc. Vui lòng chờ trong giây lát!</p>
+      <div style="font-size:13px;color:var(--muted)">Vị trí của bạn trong hàng chờ:</div>
+      <div class="waiting-position" id="queuePosText">#1</div>
+      <p style="font-size:13px;color:var(--gold);margin-bottom:24px">Hệ thống sẽ tự động đưa bạn vào màn hình chọn ghế ngay khi có vị trí trống...</p>
+      <button class="btn btn--outline" onclick="closeWaitingModal()">✕ Rời Hàng Chờ</button>
     </div>
   </div>
 

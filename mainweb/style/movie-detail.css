@@ -232,6 +232,63 @@
 .seat--locked  { background: #2A1A1A; border-color: #3A2A2A; cursor: not-allowed; }
 .seat--locked::after { content: '🔒'; font-size: 8px; }
 
+.seat--locked-other {
+  background: #5A2A10 !important;
+  border-color: #E88830 !important;
+  cursor: not-allowed !important;
+  box-shadow: 0 0 6px rgba(232, 136, 48, 0.4);
+  position: relative;
+}
+.seat--locked-other::after { content: '⏳'; font-size: 9px; }
+
+/* Hold Timer Bar (5 Minutes) */
+.hold-timer-bar {
+  display: flex; align-items: center; justify-content: space-between;
+  background: linear-gradient(90deg, rgba(232,184,109,0.15) 0%, rgba(232,69,69,0.2) 100%);
+  border: 1px solid rgba(232,184,109,0.4);
+  border-radius: 10px; padding: 10px 16px; margin-bottom: 16px;
+  font-size: 13px; font-weight: 600; color: var(--gold);
+}
+.hold-timer-bar.urgent {
+  background: linear-gradient(90deg, rgba(232,69,69,0.3) 0%, rgba(255,0,0,0.4) 100%);
+  border-color: var(--red); color: #fff;
+  animation: timerBlink 1s infinite alternate;
+}
+@keyframes timerBlink { from { opacity: 1; } to { opacity: 0.7; } }
+
+.timer-countdown {
+  font-family: 'Playfair Display', monospace;
+  font-size: 18px; font-weight: 800; color: #fff; background: rgba(0,0,0,0.3);
+  padding: 2px 10px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.1);
+}
+
+/* Waiting Room Modal */
+.waiting-modal-overlay {
+  display: none; position: fixed; inset: 0;
+  background: rgba(10,10,15,0.95); z-index: 500;
+  align-items: center; justify-content: center; padding: 20px;
+}
+.waiting-modal-overlay.open { display: flex; }
+
+.waiting-card {
+  background: var(--dark2); border-radius: 20px;
+  border: 1px solid rgba(232,184,109,0.3);
+  width: 100%; max-width: 480px; padding: 36px 28px; text-align: center;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+}
+.waiting-spinner {
+  width: 60px; height: 60px; border: 4px solid rgba(232,184,109,0.2);
+  border-top-color: var(--gold); border-radius: 50%;
+  margin: 0 auto 20px; animation: spin 1s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.waiting-position {
+  font-family: 'Playfair Display', serif;
+  font-size: 42px; font-weight: 900; color: var(--gold); margin: 10px 0;
+}
+.waiting-desc { font-size: 14px; color: var(--muted); line-height: 1.6; margin-bottom: 24px; }
+
 /* Order summary */
 .order-summary { background: var(--dark3); border-radius: 12px; padding: 20px; margin-top: 24px; }
 .order-row     { display: flex; justify-content: space-between; font-size: 14px; padding: 5px 0; }
@@ -255,3 +312,4 @@
   .booking-card  { position: static; }
   .seat          { width: 24px; height: 22px; }
 }
+

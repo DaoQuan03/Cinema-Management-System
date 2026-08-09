@@ -176,6 +176,56 @@ function formatExpiry(input) {
   input.value = v;
 }
 
+/* ── 5-Minute Checkout Timer Sync ────────────────────────────── */
+let checkoutTimerInterval = null;
+
+function startCheckoutTimer() {
+  let holdStart = parseInt(localStorage.getItem('cv_hold_start') || Date.now());
+  if (!localStorage.getItem('cv_hold_start')) {
+    localStorage.setItem('cv_hold_start', holdStart);
+  }
+
+  clearInterval(checkoutTimerInterval);
+  checkoutTimerInterval = setInterval(updateCheckoutTimerDisplay, 1000);
+  updateCheckoutTimerDisplay();
+}
+
+function updateCheckoutTimerDisplay() {
+  const start = parseInt(localStorage.getItem('cv_hold_start') || Date.now());
+  const elapsed = Math.floor((Date.now() - start) / 1000);
+  const remaining = Math.max(0, 300 - elapsed);
+
+  const displayEl = document.getElementById('timerDisplay');
+  const timerBar  = document.getElementById('holdTimerBar');
+
+  const mins = String(Math.floor(remaining / 60)).padStart(2, '0');
+  const secs = String(remaining % 60).padStart(2, '0');
+
+  if (displayEl) displayEl.textContent = `${mins}:${secs}`;
+
+  if (timerBar) {
+    if (remaining < 60) timerBar.classList.add('urgent');
+    else timerBar.classList.remove('urgent');
+  }
+
+  // 5 Minutes Expired -> Cancel Transaction
+  if (remaining <= 0) {
+    clearInterval(checkoutTimerInterval);
+    const payBtn = document.querySelector('.pay-btn');
+    if (payBtn) payBtn.disabled = true;
+
+    showToast('⚠️ Hết 5 phút giữ ghế! Giao dịch của bạn đã tự động bị hủy.', 'warning');
+    setTimeout(() => {
+      window.location.href = 'movies.html';
+    }, 2000);
+  }
+}
+
+// Start timer on page load
+document.addEventListener('DOMContentLoaded', () => {
+  startCheckoutTimer();
+});
+
 /* ── Process payment ───────────────────────────────────────── */
 function processPayment() {
   const name  = document.getElementById('fullname')?.value.trim();
@@ -189,7 +239,27 @@ function processPayment() {
   const overlay = document.getElementById('loadingOverlay');
   if (overlay) overlay.classList.add('show');
 
-  setTimeout(() => {
+  setTimeout(async () => {
+    // Confirm payment with Socket Server to mark seats as permanently BOOKED
+    const clientId = sessionStorage.getItem('cv_client_id') || 'cli_user';
+    try {
+      await fetch('http://127.0.0.1:4000/api/realtime/confirm-payment', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          showtimeId: '1',
+          seats: bookingSeats,
+          clientId: clientId,
+          userName: name
+        }),
+      });
+    } catch (err) {
+      console.warn('[Realtime Payment] Confirm error:', err);
+    }
+
+    clearInterval(checkoutTimerInterval);
+    localStorage.removeItem('cv_hold_start');
+
     if (overlay) overlay.classList.remove('show');
     showSuccess(name, email);
   }, 2500);
@@ -229,3 +299,4 @@ function showSuccess(name, email) {
 function downloadTicket() {
   showToast('⬇ Đang tải vé PDF...', 'success');
 }
+
