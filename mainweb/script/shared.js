@@ -24,8 +24,9 @@ localStorage.setItem('cineverse_movies', JSON.stringify(MOVIES));
 /* ── Get movies from Django Backend REST API with local fallback ─ */
 async function getMoviesAsync(params = {}) {
   try {
-    if (window.ApiClient) {
-      const data = await ApiClient.getMovies(params);
+    const res = await fetch('http://127.0.0.1:8000/api/movies/');
+    if (res.ok) {
+      const data = await res.json();
       if (Array.isArray(data) && data.length > 0) {
         return data.map(m => ({
           id: m.id,
@@ -33,16 +34,24 @@ async function getMoviesAsync(params = {}) {
           genre: m.genre,
           genreLabel: m.genre,
           rating: m.rating || 8.0,
-          duration: `${Math.floor((m.duration_mins || 120) / 60)}h ${(m.duration_mins || 120) % 60}m`,
+          duration: m.duration_mins ? `${Math.floor(m.duration_mins / 60)}h ${m.duration_mins % 60}m` : '2h 0m',
           durationMins: m.duration_mins || 120,
-          badge: m.rating >= 9.0 ? 'HOT' : (m.status === 'UPCOMING' ? 'NEW' : ''),
-          tab: m.status === 'SHOWING' ? 'showing' : (m.status === 'UPCOMING' ? 'upcoming' : 'special'),
-          poster: m.poster_url || 'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=400&q=80',
+          badge: m.badge || (m.rating >= 9.0 ? 'HOT' : (m.status === 'COMING_SOON' ? 'NEW' : '')),
+          tab: m.status === 'SHOWING' ? 'showing' : (m.status === 'COMING_SOON' ? 'upcoming' : 'special'),
+          poster: m.poster_url || m.poster || 'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=400&q=80',
+          poster_url: m.poster_url || m.poster,
+          trailer_url: m.trailer_url || 'https://www.youtube.com/embed/YoHD9XEInc0',
           director: m.director || 'N/A',
-          cast: m.cast ? m.cast.split(', ') : [],
+          cast: m.cast || '',
           desc: m.description || '',
-          rated: 'C13',
-          lang: 'Tiếng Anh',
+          description: m.description || '',
+          rated: m.age_rating || 'C13',
+          age_rating: m.age_rating || 'C13',
+          lang: m.language || 'Tiếng Anh',
+          language: m.language || 'Tiếng Anh - Phụ đề Tiếng Việt',
+          year: m.release_year || 2025,
+          release_year: m.release_year || 2025,
+          vote_count: m.vote_count || 500
         }));
       }
     }

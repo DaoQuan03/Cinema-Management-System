@@ -13,6 +13,12 @@ class Movie(TimeStampedModel):
     duration_mins = models.PositiveIntegerField(default=120, verbose_name="Thời lượng (Phút)")
     rating = models.FloatField(default=8.0, verbose_name="Đánh giá sao")
     poster_url = models.URLField(max_length=1000, blank=True, verbose_name="URL Poster")
+    trailer_url = models.URLField(max_length=1000, blank=True, verbose_name="URL Trailer YouTube")
+    age_rating = models.CharField(max_length=20, default="C13", verbose_name="Giới hạn tuổi")
+    language = models.CharField(max_length=100, default="Tiếng Anh - Phụ đề Tiếng Việt", verbose_name="Ngôn ngữ")
+    badge = models.CharField(max_length=20, default="HOT", verbose_name="Nhãn dán")
+    release_year = models.PositiveIntegerField(default=2025, verbose_name="Năm sản xuất")
+    vote_count = models.PositiveIntegerField(default=500, verbose_name="Số lượt đánh giá")
     release_date = models.DateField(null=True, blank=True, verbose_name="Ngày khởi chiếu")
     status = models.CharField(max_length=20, choices=MovieStatus.choices, default=MovieStatus.SHOWING, verbose_name="Trạng thái")
 

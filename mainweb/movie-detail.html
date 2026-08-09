@@ -48,7 +48,7 @@
         <div class="info-row" id="infoRow"></div>
         <div class="hero-cta">
           <button class="btn btn--hero"  onclick="openSeatModal()"> Chọn Ghế &amp; Đặt Vé</button>
-          <button class="btn btn--ghost" onclick="showNotifPopup('Trailer đang tải...','warning')">▶ Xem Trailer</button>
+          <button class="btn btn--ghost" onclick="openTrailerModal()">▶ Xem Trailer</button>
         </div>
       </div>
     </div>
@@ -216,6 +216,19 @@
       <div class="waiting-position" id="queuePosText">#1</div>
       <p style="font-size:13px;color:var(--gold);margin-bottom:24px">Hệ thống sẽ tự động đưa bạn vào màn hình chọn ghế ngay khi có vị trí trống...</p>
       <button class="btn btn--outline" onclick="closeWaitingModal()">✕ Rời Hàng Chờ</button>
+    </div>
+  </div>
+
+  <!-- TRAILER VIDEO PLAYER MODAL -->
+  <div class="trailer-modal-overlay" id="trailerModal">
+    <div class="trailer-modal-card">
+      <div class="trailer-modal-header">
+        <h3 id="trailerModalTitle">Xem Trailer Phim</h3>
+        <button class="modal__close" onclick="closeTrailerModal()">✕</button>
+      </div>
+      <div class="trailer-iframe-wrap">
+        <iframe id="trailerIframe" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
     </div>
   </div>
 

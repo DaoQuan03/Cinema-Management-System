@@ -32,8 +32,19 @@ let reviews        = [...SAMPLE_REVIEWS];
 /* ── Init ──────────────────────────────────────────────────── */
 document.addEventListener('DOMContentLoaded', async () => {
   const id = parseInt(getParam('id')) || 1;
-  const allMovies = await getMoviesAsync();
-  movie = allMovies.find(m => m.id === id) || allMovies[0];
+  try {
+    const res = await fetch(`http://127.0.0.1:8000/api/movies/${id}/`);
+    if (res.ok) {
+      movie = await res.json();
+    }
+  } catch (err) {
+    console.warn('[Movie Detail] Failed to fetch REST API, fallback to local data:', err);
+  }
+
+  if (!movie) {
+    const allMovies = await getMoviesAsync();
+    movie = allMovies.find(m => m.id === id) || allMovies[0];
+  }
 
   populateHero();
   populateCast();
@@ -43,22 +54,31 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 /* ── Populate hero section ─────────────────────────────────── */
 function populateHero() {
-  document.getElementById('heroBg').style.backgroundImage  = `url(${movie.poster})`;
-  document.getElementById('mainPoster').src                = movie.poster;
+  const poster = movie.poster_url || movie.poster || 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=600&q=80';
+  const durationStr = movie.duration_mins ? `${Math.floor(movie.duration_mins / 60)}h ${movie.duration_mins % 60}m` : (movie.duration || '2h 28m');
+  const ratingVal = movie.rating || 8.5;
+  const voteVal = movie.vote_count || 689;
+  const ageRating = movie.age_rating || movie.rated || 'C13';
+  const languageStr = movie.language || 'Tiếng Anh - Phụ đề Tiếng Việt';
+  const yearVal = movie.release_year || movie.year || 2025;
+  const descStr = movie.description || movie.desc || '';
+
+  document.getElementById('heroBg').style.backgroundImage  = `url(${poster})`;
+  document.getElementById('mainPoster').src                = poster;
   document.getElementById('movieTitle').textContent        = movie.title;
   document.getElementById('breadcrumbTitle').textContent   = movie.title;
-  document.getElementById('imdbBadge').textContent         = `IMDb ${movie.rating}`;
-  document.getElementById('movieStars').textContent        = '★'.repeat(Math.round(movie.rating / 2)) + '☆'.repeat(5 - Math.round(movie.rating / 2));
-  document.getElementById('voteCount').textContent         = `(${(Math.floor(Math.random() * 800) + 200).toLocaleString()} lượt)`;
-  document.getElementById('movieDesc').textContent         = movie.desc;
+  document.getElementById('imdbBadge').textContent         = `IMDb ${ratingVal}`;
+  document.getElementById('movieStars').textContent        = '★'.repeat(Math.round(ratingVal / 2)) + '☆'.repeat(5 - Math.round(ratingVal / 2));
+  document.getElementById('voteCount').textContent         = `(${voteVal.toLocaleString()} lượt)`;
+  document.getElementById('movieDesc').textContent         = descStr;
 
   // Info row
   document.getElementById('infoRow').innerHTML = [
-    { label: 'Năm',        value: movie.year      },
-    { label: 'Thời Lượng', value: movie.duration  },
-    { label: 'Giới Hạn',   value: movie.rated     },
-    { label: 'Ngôn Ngữ',   value: movie.lang      },
-    { label: 'Đạo Diễn',   value: movie.director  },
+    { label: 'Năm',        value: yearVal      },
+    { label: 'Thời Lượng', value: durationStr  },
+    { label: 'Giới Hạn',   value: ageRating    },
+    { label: 'Ngôn Ngữ',   value: languageStr  },
+    { label: 'Đạo Diễn',   value: movie.director || 'Christopher Nolan' },
   ].map(i => `
     <div class="info-item">
       <div class="info-item__label">${i.label}</div>
@@ -68,10 +88,10 @@ function populateHero() {
   // Tags
   const badgeMap = { HOT:'badge--hot', NEW:'badge--new' };
   document.getElementById('movieTags').innerHTML = `
-    <span class="tag">${movie.genreLabel || movie.genre}</span>
-    <span class="tag">${movie.duration}</span>
-    <span class="tag tag--age">${movie.rated}</span>
-    ${movie.badge ? `<span class="tag tag--hot badge ${badgeMap[movie.badge]||''}">${movie.badge}</span>` : ''}
+    <span class="tag">${movie.genre || 'Khoa học viễn tưởng'}</span>
+    <span class="tag">${durationStr}</span>
+    <span class="tag tag--age">${ageRating}</span>
+    ${movie.badge && movie.badge !== 'NONE' ? `<span class="tag tag--hot badge ${badgeMap[movie.badge]||''}">${movie.badge}</span>` : ''}
   `;
 }
 
@@ -79,12 +99,52 @@ function populateHero() {
 function populateCast() {
   const castRow = document.getElementById('castRow');
   if (!castRow) return;
-  castRow.innerHTML = (movie.cast || []).map((name, i) => `
+
+  let castList = [];
+  if (typeof movie.cast === 'string') {
+    castList = movie.cast.split(',').map(c => c.trim()).filter(Boolean);
+  } else if (Array.isArray(movie.cast)) {
+    castList = movie.cast;
+  }
+
+  if (castList.length === 0) {
+    castList = ['Leonardo DiCaprio', 'Joseph Gordon-Levitt', 'Elliot Page', 'Tom Hardy', 'Ken Watanabe'];
+  }
+
+  castRow.innerHTML = castList.map((name, i) => `
     <div class="cast-card">
-      <img class="cast-avatar" src="${CAST_AVATARS[i] || CAST_AVATARS[0]}" alt="${name}">
+      <img class="cast-avatar" src="${CAST_AVATARS[i % CAST_AVATARS.length]}" alt="${name}">
       <div class="cast-name">${name}</div>
       <div class="cast-role">Diễn viên</div>
     </div>`).join('');
+}
+
+/* ── Trailer Video Player Modal ────────────────────────────── */
+function openTrailerModal() {
+  const modal = document.getElementById('trailerModal');
+  const iframe = document.getElementById('trailerIframe');
+  const titleEl = document.getElementById('trailerModalTitle');
+
+  let trailerUrl = movie.trailer_url || 'https://www.youtube.com/embed/YoHD9XEInc0';
+  if (trailerUrl.includes('watch?v=')) {
+    trailerUrl = trailerUrl.replace('watch?v=', 'embed/');
+  }
+  if (!trailerUrl.includes('autoplay=')) {
+    trailerUrl += (trailerUrl.includes('?') ? '&' : '?') + 'autoplay=1';
+  }
+
+  if (titleEl) titleEl.textContent = `Trailer: ${movie.title}`;
+  if (iframe) iframe.src = trailerUrl;
+  if (modal) modal.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeTrailerModal() {
+  const modal = document.getElementById('trailerModal');
+  const iframe = document.getElementById('trailerIframe');
+  if (iframe) iframe.src = ''; // Stop video playback
+  if (modal) modal.classList.remove('open');
+  document.body.style.overflow = '';
 }
 
 /* ── Reviews ───────────────────────────────────────────────── */
