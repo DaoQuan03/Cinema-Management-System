@@ -18,8 +18,10 @@ const MOVIES = [
   { id:12, title:"Avatar 3",                 genre:"scifi",     genreLabel:"Khoa học viễn tưởng", rating:8.9, duration:"3h 20m", durationMins:200, badge:"HOT", tab:"upcoming",year:"2025", rated:"P",   lang:"Tiếng Anh", director:"James Cameron",        poster:"https://images.unsplash.com/photo-1614854262318-831574f15f1f?w=400&q=80", desc:"Jake Sully và gia đình Na'vi tiếp tục cuộc chiến chống lại sự xâm lược của Trái Đất.", cast:["Sam Worthington","Zoe Saldana","Sigourney Weaver","Stephen Lang","Kate Winslet"] },
 ];
 
-/* Save to localStorage for cross-page access */
-localStorage.setItem('cineverse_movies', JSON.stringify(MOVIES));
+/* Save default fallback movies to localStorage ONLY if empty */
+if (!localStorage.getItem('cineverse_movies')) {
+  localStorage.setItem('cineverse_movies', JSON.stringify(MOVIES));
+}
 
 /* ── Get movies from Django Backend REST API with local fallback ─ */
 async function getMoviesAsync(params = {}) {
@@ -28,7 +30,7 @@ async function getMoviesAsync(params = {}) {
     if (res.ok) {
       const data = await res.json();
       if (Array.isArray(data) && data.length > 0) {
-        return data.map(m => ({
+        const mapped = data.map(m => ({
           id: m.id,
           title: m.title,
           genre: m.genre,
@@ -53,6 +55,8 @@ async function getMoviesAsync(params = {}) {
           release_year: m.release_year || 2025,
           vote_count: m.vote_count || 500
         }));
+        localStorage.setItem('cineverse_movies', JSON.stringify(mapped));
+        return mapped;
       }
     }
   } catch (err) {
