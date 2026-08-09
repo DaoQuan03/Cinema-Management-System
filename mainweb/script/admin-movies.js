@@ -193,6 +193,12 @@ async function saveMovie(e) {
 
     if (!res.ok) throw new Error('Failed to save to Database');
 
+    // Save to local admin added cache for instant cross-page sync
+    let adminAdded = JSON.parse(localStorage.getItem('cv_admin_added_movies') || '[]');
+    adminAdded = adminAdded.filter(m => (m.title || '').toLowerCase() !== title.toLowerCase());
+    adminAdded.unshift({ ...payload, id: editingMovieId || Date.now(), tab: status === 'SHOWING' ? 'showing' : 'upcoming' });
+    localStorage.setItem('cv_admin_added_movies', JSON.stringify(adminAdded));
+
     showToast(`✓ Đã ${editingMovieId ? 'cập nhật' : 'thêm mới'} thành công phim "${title}" vào CSDL!`, 'success');
     closeMovieModal();
     await renderAdminMovies();

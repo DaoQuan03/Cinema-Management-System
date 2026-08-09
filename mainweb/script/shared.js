@@ -4,33 +4,29 @@
 
 /* ── Movie Data Store ──────────────────────────────────────── */
 const MOVIES = [
-  { id:1,  title:"Inception 2",              genre:"scifi",     genreLabel:"Khoa học viễn tưởng", rating:9.1, duration:"2h 28m", durationMins:148, badge:"HOT", tab:"showing", year:"2025", rated:"C13", lang:"Tiếng Anh", director:"Christopher Nolan", poster:"https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=400&q=80", desc:"Cuộc hành trình vào sâu trong giấc mơ lần thứ hai với những bí ẩn sâu hơn, nguy hiểm hơn. Dom Cobb trở lại với nhiệm vụ không thể tưởng tượng được.", cast:["Leonardo DiCaprio","Joseph G-L","Elliot Page","Tom Hardy","Ken Watanabe"] },
-  { id:2,  title:"Avengers: Endgame 2",      genre:"action",    genreLabel:"Hành động",           rating:8.8, duration:"3h 5m",  durationMins:185, badge:"HOT", tab:"showing", year:"2025", rated:"C13", lang:"Tiếng Anh", director:"Russo Brothers",       poster:"https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=400&q=80", desc:"Sau thảm họa Infinity War, những anh hùng còn lại phải đối mặt với kẻ thù mạnh mẽ nhất chưa từng thấy.", cast:["Robert Downey Jr","Chris Evans","Scarlett Johansson","Chris Hemsworth","Mark Ruffalo"] },
-  { id:3,  title:"Dune: Part Three",         genre:"scifi",     genreLabel:"Khoa học viễn tưởng", rating:8.5, duration:"2h 45m", durationMins:165, badge:"NEW", tab:"showing", year:"2025", rated:"C18", lang:"Tiếng Anh", director:"Denis Villeneuve",     poster:"https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&q=80", desc:"Trên hành tinh Arrakis, Paul Atreides tiếp tục hành trình định mệnh. Cuộc chiến gia vị leo thang đến đỉnh điểm.", cast:["Timothée Chalamet","Zendaya","Rebecca Ferguson","Oscar Isaac","Josh Brolin"] },
-  { id:4,  title:"The Dark Knight Returns",  genre:"action",    genreLabel:"Hành động",           rating:9.3, duration:"2h 15m", durationMins:135, badge:"",    tab:"showing", year:"2025", rated:"C16", lang:"Tiếng Anh", director:"Christopher Nolan",    poster:"https://images.unsplash.com/photo-1531259683007-016a7b628fc3?w=400&q=80", desc:"Batman trở lại sau 10 năm ẩn dật để đối mặt với mối đe dọa lớn nhất lịch sử thành phố Gotham.", cast:["Christian Bale","Heath Ledger Jr","Anne Hathaway","Gary Oldman","Tom Hardy"] },
-  { id:5,  title:"La La Land 2",             genre:"romance",   genreLabel:"Tình cảm",            rating:8.2, duration:"2h 5m",  durationMins:125, badge:"NEW", tab:"showing", year:"2025", rated:"P",   lang:"Tiếng Anh", director:"Damien Chazelle",      poster:"https://images.unsplash.com/photo-1485846234645-a62644f84728?w=400&q=80", desc:"5 năm sau, Sebastian và Mia tình cờ gặp lại nhau. Tình yêu và ước mơ, liệu có cùng tồn tại?", cast:["Ryan Gosling","Emma Stone","John Legend","Rosemarie DeWitt","J.K. Simmons"] },
-  { id:6,  title:"Parasite 2",               genre:"thriller",  genreLabel:"Tâm lý",              rating:8.7, duration:"2h 20m", durationMins:140, badge:"",    tab:"showing", year:"2025", rated:"C18", lang:"Tiếng Hàn", director:"Bong Joon-ho",         poster:"https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?w=400&q=80", desc:"Gia đình Kim đối mặt với hậu quả của những lựa chọn trong quá khứ và tìm cách xây dựng lại cuộc sống.", cast:["Song Kang-ho","Lee Sun-kyun","Cho Yeo-jeong","Choi Woo-shik","Park So-dam"] },
-  { id:7,  title:"Frozen 3",                 genre:"animation", genreLabel:"Hoạt hình",           rating:8.0, duration:"1h 50m", durationMins:110, badge:"",    tab:"upcoming",year:"2025", rated:"P",   lang:"Tiếng Anh", director:"Jennifer Lee",         poster:"https://images.unsplash.com/photo-1440404653325-ab127d49abc1?w=400&q=80", desc:"Elsa và Anna bước vào vương quốc băng giá huyền bí chưa từng được khám phá.", cast:["Idina Menzel","Kristen Bell","Josh Gad","Jonathan Groff","Evan Peters"] },
-  { id:8,  title:"Interstellar 2",           genre:"scifi",     genreLabel:"Khoa học viễn tưởng", rating:9.0, duration:"3h 0m",  durationMins:180, badge:"HOT", tab:"upcoming",year:"2025", rated:"P",   lang:"Tiếng Anh", director:"Christopher Nolan",    poster:"https://images.unsplash.com/photo-1419242902214-272b3f66ee7a?w=400&q=80", desc:"Cooper trở lại từ chiều không gian thứ 5 với kiến thức có thể cứu nhân loại.", cast:["Matthew McConaughey","Anne Hathaway","Jessica Chastain","Michael Caine","Wes Bentley"] },
-  { id:9,  title:"The Revenant 2",           genre:"thriller",  genreLabel:"Tâm lý",              rating:8.4, duration:"2h 30m", durationMins:150, badge:"",    tab:"showing", year:"2025", rated:"C18", lang:"Tiếng Anh", director:"Alejandro González",   poster:"https://images.unsplash.com/photo-1520699514109-de478f0e2dec?w=400&q=80", desc:"Hugh Glass trở lại với hành trình sinh tồn khốc liệt hơn trong vùng hoang dã.", cast:["Leonardo DiCaprio","Tom Hardy","Will Poulter","Domhnall Gleeson","Lukas Haas"] },
-  { id:10, title:"It Chapter 3",             genre:"horror",    genreLabel:"Kinh dị",             rating:7.8, duration:"2h 10m", durationMins:130, badge:"NEW", tab:"upcoming",year:"2025", rated:"C18", lang:"Tiếng Anh", director:"Andy Muschietti",      poster:"https://images.unsplash.com/photo-1481821715704-04c62e67b57c?w=400&q=80", desc:"Pennywise trở lại sau 27 năm. Nhóm Losers phải đối mặt với nỗi sợ hãi lớn nhất lần cuối.", cast:["Bill Skarsgård","Jaeden Martell","Sophia Lillis","Finn Wolfhard","Jack Dylan Grazer"] },
-  { id:11, title:"The Grand Budapest Hotel 2",genre:"comedy",   genreLabel:"Hài hước",            rating:8.6, duration:"1h 55m", durationMins:115, badge:"",    tab:"special", year:"2025", rated:"P",   lang:"Tiếng Anh", director:"Wes Anderson",         poster:"https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&q=80", desc:"Hành trình mới tại khách sạn huyền thoại Grand Budapest cùng những nhân vật kỳ quặc.", cast:["Ralph Fiennes","Tony Revolori","Saoirse Ronan","F. Murray Abraham","Mathieu Amalric"] },
-  { id:12, title:"Avatar 3",                 genre:"scifi",     genreLabel:"Khoa học viễn tưởng", rating:8.9, duration:"3h 20m", durationMins:200, badge:"HOT", tab:"upcoming",year:"2025", rated:"P",   lang:"Tiếng Anh", director:"James Cameron",        poster:"https://images.unsplash.com/photo-1614854262318-831574f15f1f?w=400&q=80", desc:"Jake Sully và gia đình Na'vi tiếp tục cuộc chiến chống lại sự xâm lược của Trái Đất.", cast:["Sam Worthington","Zoe Saldana","Sigourney Weaver","Stephen Lang","Kate Winslet"] },
+  { id:1,  title:"Inception 2",              genre:"scifi",     genreLabel:"Khoa học viễn tưởng", rating:9.1, duration:"2h 28m", durationMins:148, badge:"HOT", tab:"showing", year:"2025", rated:"C13", lang:"Tiếng Anh", director:"Christopher Nolan", poster:"https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=400&q=80", desc:"Cuộc hành trình vào sâu trong giấc mơ lần thứ hai với những bí ẩn sâu hơn, nguy hiểm hơn.", cast:["Leonardo DiCaprio","Joseph G-L","Elliot Page"] },
+  { id:2,  title:"Avengers: Endgame 2",      genre:"action",    genreLabel:"Hành động",           rating:8.8, duration:"3h 5m",  durationMins:185, badge:"HOT", tab:"showing", year:"2025", rated:"C13", lang:"Tiếng Anh", director:"Russo Brothers",       poster:"https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=400&q=80", desc:"Sau thảm họa Infinity War, những anh hùng còn lại phải đối mặt với kẻ thù mạnh mẽ nhất.", cast:["Robert Downey Jr","Chris Evans","Scarlett Johansson"] },
+  { id:3,  title:"Dune: Part Three",         genre:"scifi",     genreLabel:"Khoa học viễn tưởng", rating:8.5, duration:"2h 45m", durationMins:165, badge:"NEW", tab:"showing", year:"2025", rated:"C18", lang:"Tiếng Anh", director:"Denis Villeneuve",     poster:"https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&q=80", desc:"Trên hành tinh Arrakis, Paul Atreides tiếp tục hành trình định mệnh.", cast:["Timothée Chalamet","Zendaya","Rebecca Ferguson"] },
+  { id:4,  title:"The Dark Knight Returns",  genre:"action",    genreLabel:"Hành động",           rating:9.3, duration:"2h 15m", durationMins:135, badge:"HOT", tab:"showing", year:"2025", rated:"C16", lang:"Tiếng Anh", director:"Christopher Nolan",    poster:"https://images.unsplash.com/photo-1531259683007-016a7b628fc3?w=400&q=80", desc:"Batman trở lại sau 10 năm ẩn dật để đối mặt với mối đe dọa lớn nhất lịch sử.", cast:["Christian Bale","Heath Ledger Jr","Anne Hathaway"] },
+  { id:5,  title:"Spider-Man: Brand New Day", genre:"action",    genreLabel:"Hành động",           rating:8.9, duration:"2h 20m", durationMins:140, badge:"HOT", tab:"showing", year:"2025", rated:"P",   lang:"Tiếng Anh", director:"Jon Watts",            poster:"https://images.unsplash.com/photo-1635805737707-575885ab0820?w=400&q=80", desc:"Peter Parker bắt đầu chương mới trong cuộc đời nhện sau khi thế giới quên đi danh tính của anh.", cast:["Tom Holland","Zendaya","Benedict Cumberbatch"] },
+  { id:6,  title:"La La Land 2",             genre:"romance",   genreLabel:"Tình cảm",            rating:8.2, duration:"2h 5m",  durationMins:125, badge:"NEW", tab:"showing", year:"2025", rated:"P",   lang:"Tiếng Anh", director:"Damien Chazelle",      poster:"https://images.unsplash.com/photo-1485846234645-a62644f84728?w=400&q=80", desc:"5 năm sau, Sebastian và Mia tình cờ gặp lại nhau. Tình yêu và ước mơ, liệu có cùng tồn tại?", cast:["Ryan Gosling","Emma Stone","John Legend"] },
+  { id:7,  title:"Parasite 2",               genre:"thriller",  genreLabel:"Tâm lý",              rating:8.7, duration:"2h 20m", durationMins:140, badge:"",    tab:"showing", year:"2025", rated:"C18", lang:"Tiếng Hàn", director:"Bong Joon-ho",         poster:"https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?w=400&q=80", desc:"Gia đình Kim đối mặt với hậu quả của những lựa chọn trong quá khứ.", cast:["Song Kang-ho","Lee Sun-kyun","Cho Yeo-jeong"] },
+  { id:8,  title:"Frozen 3",                 genre:"animation", genreLabel:"Hoạt hình",           rating:8.0, duration:"1h 50m", durationMins:110, badge:"",    tab:"upcoming",year:"2025", rated:"P",   lang:"Tiếng Anh", director:"Jennifer Lee",         poster:"https://images.unsplash.com/photo-1440404653325-ab127d49abc1?w=400&q=80", desc:"Elsa và Anna bước vào vương quốc băng giá huyền bí chưa từng được khám phá.", cast:["Idina Menzel","Kristen Bell","Josh Gad"] },
+  { id:9,  title:"Interstellar 2",           genre:"scifi",     genreLabel:"Khoa học viễn tưởng", rating:9.0, duration:"3h 0m",  durationMins:180, badge:"HOT", tab:"upcoming",year:"2025", rated:"P",   lang:"Tiếng Anh", director:"Christopher Nolan",    poster:"https://images.unsplash.com/photo-1419242902214-272b3f66ee7a?w=400&q=80", desc:"Cooper trở lại từ chiều không gian thứ 5 với kiến thức có thể cứu nhân loại.", cast:["Matthew McConaughey","Anne Hathaway","Jessica Chastain"] },
+  { id:10, title:"Avatar 3",                 genre:"scifi",     genreLabel:"Khoa học viễn tưởng", rating:8.9, duration:"3h 20m", durationMins:200, badge:"HOT", tab:"upcoming",year:"2025", rated:"P",   lang:"Tiếng Anh", director:"James Cameron",        poster:"https://images.unsplash.com/photo-1614854262318-831574f15f1f?w=400&q=80", desc:"Jake Sully và gia đình Na'vi tiếp tục cuộc chiến chống lại sự xâm lược của Trái Đất.", cast:["Sam Worthington","Zoe Saldana","Sigourney Weaver"] },
 ];
 
-/* Save default fallback movies to localStorage ONLY if empty */
-if (!localStorage.getItem('cineverse_movies')) {
-  localStorage.setItem('cineverse_movies', JSON.stringify(MOVIES));
-}
-
-/* ── Get movies from Django Backend REST API with local fallback ─ */
+/* ── Get movies from Django Backend REST API with fallback ────── */
 async function getMoviesAsync(params = {}) {
+  const host = window.location.hostname || '127.0.0.1';
+  let apiMovies = [];
+
   try {
-    const res = await fetch('http://127.0.0.1:8000/api/movies/');
+    const res = await fetch(`http://${host}:8000/api/movies/`);
     if (res.ok) {
       const data = await res.json();
       if (Array.isArray(data) && data.length > 0) {
-        const mapped = data.map(m => ({
+        apiMovies = data.map(m => ({
           id: m.id,
           title: m.title,
           genre: m.genre,
@@ -55,14 +51,31 @@ async function getMoviesAsync(params = {}) {
           release_year: m.release_year || 2025,
           vote_count: m.vote_count || 500
         }));
-        localStorage.setItem('cineverse_movies', JSON.stringify(mapped));
-        return mapped;
       }
     }
   } catch (err) {
-    console.warn('[CineVerse] Django API offline, using local fallback:', err);
+    console.warn('[CineVerse] REST API offline, using local list:', err);
   }
-  return getMovies();
+
+  // Get Admin-added movies from localStorage if any
+  let localAdminMovies = [];
+  try {
+    localAdminMovies = JSON.parse(localStorage.getItem('cv_admin_added_movies') || '[]');
+  } catch {}
+
+  // Combine DB movies, Admin-added movies, and fallback MOVIES (preventing duplicates)
+  const combined = [...apiMovies, ...localAdminMovies, ...MOVIES];
+  const uniqueMap = new Map();
+  combined.forEach(m => {
+    const key = (m.title || '').toLowerCase().trim();
+    if (!uniqueMap.has(key)) {
+      uniqueMap.set(key, m);
+    }
+  });
+
+  const resultList = Array.from(uniqueMap.values());
+  localStorage.setItem('cineverse_movies', JSON.stringify(resultList));
+  return resultList;
 }
 
 function getMovies() {
