@@ -38,7 +38,7 @@ async function getMoviesAsync(params = {}) {
           tab: m.status === 'SHOWING' ? 'showing' : (m.status === 'COMING_SOON' ? 'upcoming' : 'special'),
           poster: m.poster_url || m.poster || 'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=400&q=80',
           poster_url: m.poster_url || m.poster,
-          trailer_url: m.trailer_url || 'https://www.youtube.com/embed/YoHD9XEInc0',
+          trailer_url: m.trailer_url || 'https://www.youtube.com/watch?v=rt-2cxAiPJk',
           director: m.director || 'N/A',
           cast: m.cast || '',
           desc: m.description || '',

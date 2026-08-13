@@ -169,7 +169,7 @@ async function saveMovie(e) {
   const payload = {
     title, genre, duration_mins: mins, director, cast,
     age_rating, language, badge, status, poster_url,
-    trailer_url: trailer_url || 'https://www.youtube.com/embed/YoHD9XEInc0',
+    trailer_url: trailer_url || 'https://www.youtube.com/watch?v=rt-2cxAiPJk',
     description, rating: 8.5, release_year: 2025, vote_count: 500
   };
 

@@ -224,10 +224,15 @@
     <div class="trailer-modal-card">
       <div class="trailer-modal-header">
         <h3 id="trailerModalTitle">Xem Trailer Phim</h3>
-        <button class="modal__close" onclick="closeTrailerModal()">✕</button>
+        <div style="display:flex;align-items:center;gap:12px">
+          <a id="trailerExternalLink" href="#" target="_blank" class="btn btn--outline" style="padding:6px 12px;font-size:12px;display:none;align-items:center;gap:6px">
+            <span style="color:#ff4444">▶</span> Mở trên YouTube
+          </a>
+          <button class="modal__close" onclick="closeTrailerModal()">✕</button>
+        </div>
       </div>
       <div class="trailer-iframe-wrap">
-        <iframe id="trailerIframe" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        <iframe id="trailerIframe" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>
       </div>
     </div>
   </div>
