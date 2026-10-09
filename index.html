@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <title>CinéLux — Cinema Management System</title>
+  <link rel="stylesheet" href="css/main.css?v=2.1">
+  <link rel="stylesheet" href="css/components.css?v=2.1">
+  <link rel="stylesheet" href="css/pages.css?v=2.1">
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════
+     AUTH PAGE
+     ══════════════════════════════════════════════════ -->
+<div class="auth-page" id="authPage">
+  <div class="auth-bg"></div>
+  <div class="auth-card">
+    <div class="auth-logo">CinéLux</div>
+    <div class="auth-tagline">Cinema Management System</div>
+    <div class="auth-tabs">
+      <button class="auth-tab active" onclick="switchAuthTab('login')">Đăng nhập</button>
+      <button class="auth-tab"        onclick="switchAuthTab('register')">Đăng ký</button>
+    </div>
+
+    <!-- Login -->
+    <div id="loginForm">
+      <div class="form-group" style="margin-bottom:14px">
+        <label class="form-label">Email</label>
+        <input class="form-input" type="email" placeholder="admin@cinelux.vn" id="loginEmail">
+      </div>
+      <div class="form-group" style="margin-bottom:20px">
+        <label class="form-label">Mật khẩu</label>
+        <input class="form-input" type="password" placeholder="••••••••" id="loginPass">
+      </div>
+      <button class="btn btn-primary" style="width:100%;justify-content:center" onclick="doLogin()">
+        Đăng nhập →
+      </button>
+
+      <!-- Gợi ý tài khoản demo theo vai trò -->
+      <div style="margin-top:16px;padding:12px;background:var(--surface2);border:1px solid var(--border);border-radius:8px">
+        <div style="font-size:11px;color:var(--gold);font-weight:600;margin-bottom:8px">⚡ TÀI KHOẢN MẪU (CLICK ĐỂ ĐIỀN NHANH):</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          <button type="button" class="btn btn-secondary btn-sm" style="font-size:11px;padding:4px 8px" onclick="fillDemo('admin@cinelux.vn','admin123')">👑 Admin</button>
+          <button type="button" class="btn btn-secondary btn-sm" style="font-size:11px;padding:4px 8px" onclick="fillDemo('staff@cinelux.vn','staff123')">👨‍💼 Staff</button>
+          <button type="button" class="btn btn-secondary btn-sm" style="font-size:11px;padding:4px 8px" onclick="fillDemo('user1@cinelux.vn','user123')">🎟️ User 1</button>
+          <button type="button" class="btn btn-secondary btn-sm" style="font-size:11px;padding:4px 8px" onclick="fillDemo('user2@cinelux.vn','user123')">🎟️ User 2</button>
+        </div>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:8px;line-height:1.4">
+          Hệ thống sẽ <b>tự động phân quyền</b> theo thông tin tài khoản bạn đăng nhập.
+        </div>
+      </div>
+    </div>
+
+    <!-- Register -->
+    <div id="registerForm" style="display:none">
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">Họ tên</label>
+          <input class="form-input" id="regName" placeholder="Nguyễn Văn A">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Số điện thoại</label>
+          <input class="form-input" id="regPhone" placeholder="0901 234 567">
+        </div>
+        <div class="form-group form-full">
+          <label class="form-label">Email</label>
+          <input class="form-input" id="regEmail" type="email" placeholder="email@example.com">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Mật khẩu</label>
+          <input class="form-input" id="regPass" type="password" placeholder="••••••••">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Xác nhận</label>
+          <input class="form-input" id="regPassConfirm" type="password" placeholder="••••••••">
+        </div>
+      </div>
+      <button class="btn btn-primary" style="width:100%;justify-content:center;margin-top:20px"
+              onclick="doRegister()">
+        Tạo tài khoản →
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     MAIN APP
+     ══════════════════════════════════════════════════ -->
+<div class="app" id="mainApp" style="display:none">
+
+  <!-- ── SIDEBAR ── -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-text">CinéLux</div>
+      <div class="logo-sub">Management System</div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-title">Tổng quan</div>
+      <div class="nav-item active" data-roles="Admin" onclick="nav('dashboard')">
+        <span class="nav-icon">📊</span> Dashboard
+      </div>
+
+      <div class="nav-section-title">Phim & Rạp</div>
+      <div class="nav-item" data-roles="Admin" onclick="nav('movies')">
+        <span class="nav-icon">🎬</span> Quản lý Phim
+      </div>
+      <div class="nav-item" data-roles="Admin" onclick="nav('rooms')">
+        <span class="nav-icon">🏛️</span> Phòng chiếu
+      </div>
+      <div class="nav-item" data-roles="Admin,Staff,User" onclick="nav('schedule')">
+        <span class="nav-icon">📅</span> Lịch chiếu
+      </div>
+
+      <div class="nav-section-title">Đặt vé</div>
+      <div class="nav-item" data-roles="Admin,Staff,User" onclick="nav('booking')">
+        <span class="nav-icon">🎟️</span> Đặt vé Online
+        <span class="nav-badge">HOT</span>
+      </div>
+      <div class="nav-item" data-roles="Admin,Staff" onclick="nav('tickets')">
+        <span class="nav-icon">📋</span> Danh sách vé
+      </div>
+
+      <div class="nav-section-title">Vận hành</div>
+      <div class="nav-item" data-roles="Admin,Staff" onclick="nav('staff')">
+        <span class="nav-icon">👨‍💼</span> Nhân viên
+      </div>
+      <div class="nav-item" data-roles="Admin" onclick="nav('revenue')">
+        <span class="nav-icon">💰</span> Doanh thu
+      </div>
+      <div class="nav-item" data-roles="Admin,Staff,User" onclick="nav('reviews')">
+        <span class="nav-icon">⭐</span> Đánh giá
+      </div>
+
+      <div class="nav-section-title">Tài khoản</div>
+      <div class="nav-item" data-roles="Admin,Staff,User" onclick="nav('profile')">
+        <span class="nav-icon">👤</span> Hồ sơ cá nhân
+      </div>
+      <div class="nav-item" data-roles="Admin" onclick="nav('users')">
+        <span class="nav-icon">🛡️</span> Người dùng
+      </div>
+    </nav>
+    <div class="sidebar-user">
+      <div class="user-avatar" id="sidebarAvatar">A</div>
+      <div>
+        <div class="user-name" id="sidebarName">Admin</div>
+        <div class="user-role" id="sidebarRole">Administrator</div>
+      </div>
+      <button class="user-logout" onclick="doLogout()" title="Đăng xuất">⎋</button>
+    </div>
+  </aside>
+
+  <!-- ── MAIN ── -->
+  <main class="main">
+    <div class="topbar">
+      <div class="topbar-title" id="pageTitle">Dashboard</div>
+      <div class="topbar-search">
+        <span>🔍</span>
+        <input type="text" placeholder="Tìm kiếm...">
+      </div>
+      <button class="btn btn-secondary btn-sm" onclick="nav('booking')">🎟️ Đặt vé nhanh</button>
+    </div>
+
+    <div class="content">
+      <!-- Pages loaded from separate HTML files via includes -->
+      <div id="page-dashboard" class="page active"></div>
+      <div id="page-movies"    class="page"></div>
+      <div id="page-rooms"     class="page"></div>
+      <div id="page-schedule"  class="page"></div>
+      <div id="page-booking"   class="page"></div>
+      <div id="page-tickets"   class="page"></div>
+      <div id="page-staff"     class="page"></div>
+      <div id="page-revenue"   class="page"></div>
+      <div id="page-reviews"   class="page"></div>
+      <div id="page-profile"   class="page"></div>
+      <div id="page-users"     class="page"></div>
+    </div>
+  </main>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     MODALS  (dùng chung toàn app)
+     ══════════════════════════════════════════════════ -->
+
+<!-- Movie Modal -->
+<div class="modal-overlay" id="modalMovie">
+  <div class="modal">
+    <div class="modal-title">
+      Thêm / Sửa Phim
+      <button class="modal-close" onclick="closeModal('modalMovie')">✕</button>
+    </div>
+    <div class="form-grid">
+      <div class="form-group form-full">
+        <label class="form-label">Tên phim</label>
+        <input class="form-input" placeholder="Tên phim...">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Thể loại</label>
+        <select class="form-select">
+          <option>Action</option><option>Horror</option><option>Romantic</option>
+          <option>Thriller</option><option>Comedy</option><option>Sci-Fi</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Thời lượng (phút)</label>
+        <input class="form-input" placeholder="120" type="number">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Ngày khởi chiếu</label>
+        <input class="form-input" type="date">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Ngày kết thúc</label>
+        <input class="form-input" type="date">
+      </div>
+      <div class="form-group form-full">
+        <label class="form-label">Nội dung phim</label>
+        <textarea class="form-textarea" placeholder="Mô tả nội dung..."></textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Đạo diễn</label>
+        <input class="form-input" placeholder="Tên đạo diễn">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Diễn viên chính</label>
+        <input class="form-input" placeholder="Tên diễn viên">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Rating</label>
+        <select class="form-select">
+          <option>P (Mọi lứa tuổi)</option>
+          <option>C13</option><option>C16</option><option>C18</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Ngôn ngữ</label>
+        <select class="form-select">
+          <option>Tiếng Việt (lồng tiếng)</option>
+          <option>Phụ đề Việt</option>
+          <option>Tiếng Anh</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modalMovie')">Hủy</button>
+      <button class="btn btn-primary"   onclick="saveMovie()">💾 Lưu phim</button>
+    </div>
+  </div>
+</div>
+
+<!-- Room Modal -->
+<div class="modal-overlay" id="modalRoom">
+  <div class="modal">
+    <div class="modal-title">
+      Thêm / Sửa Phòng chiếu
+      <button class="modal-close" onclick="closeModal('modalRoom')">✕</button>
+    </div>
+    <div class="form-grid">
+      <div class="form-group form-full">
+        <label class="form-label">Tên phòng</label>
+        <input class="form-input" placeholder="Phòng 5 - IMAX Premium">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Loại phòng</label>
+        <select class="form-select">
+          <option>2D</option><option>3D</option><option>IMAX</option>
+          <option>4DX</option><option>Sweetbox</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Số hàng ghế</label>
+        <input class="form-input" type="number" value="10">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Ghế mỗi hàng</label>
+        <input class="form-input" type="number" value="15">
+      </div>
+    </div>
+    <div style="margin-top:16px">
+      <div class="form-label" style="margin-bottom:10px">Cấu hình loại ghế</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
+        <div class="form-group">
+          <label class="form-label" style="color:var(--gold)">Hàng VIP (từ)</label>
+          <input class="form-input" placeholder="D-F">
+        </div>
+        <div class="form-group">
+          <label class="form-label" style="color:var(--red)">Hàng Sweetbox</label>
+          <input class="form-input" placeholder="J">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Phần còn lại</label>
+          <input class="form-input" value="Standard" readonly style="color:var(--text-muted)">
+        </div>
+      </div>
+    </div>
+    <div class="form-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modalRoom')">Hủy</button>
+      <button class="btn btn-primary"
+              onclick="showToast('Đã lưu phòng chiếu!','success');closeModal('modalRoom')">
+        💾 Tạo phòng
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Seat Map Modal -->
+<div class="modal-overlay" id="modalSeatMap">
+  <div class="modal modal-xl">
+    <div class="modal-title">
+      Sơ đồ ghế — Phòng 1 IMAX
+      <button class="modal-close" onclick="closeModal('modalSeatMap')">✕</button>
+    </div>
+    <div class="seat-legend">
+      <div class="legend-item"><div class="legend-dot std"></div>Standard</div>
+      <div class="legend-item"><div class="legend-dot vip"></div>VIP</div>
+      <div class="legend-item"><div class="legend-dot sweet"></div>Sweetbox</div>
+    </div>
+    <div class="screen-label">MÀN HÌNH</div>
+    <div class="screen-bar"></div>
+    <div class="seat-grid" id="adminSeatGrid"></div>
+    <div class="form-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modalSeatMap')">Đóng</button>
+      <button class="btn btn-primary"
+              onclick="showToast('Đã cập nhật sơ đồ!','success');closeModal('modalSeatMap')">
+        💾 Lưu sơ đồ
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Schedule Modal -->
+<div class="modal-overlay" id="modalSchedule">
+  <div class="modal">
+    <div class="modal-title">
+      Tạo / Sửa Suất chiếu
+      <button class="modal-close" onclick="closeModal('modalSchedule')">✕</button>
+    </div>
+    <div class="form-grid">
+      <div class="form-group form-full">
+        <label class="form-label">Phim</label>
+        <select class="form-select">
+          <option>Avengers: Secret Wars</option>
+          <option>Biển Khát</option>
+          <option>Quỷ Nhập Tràng</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Phòng chiếu</label>
+        <select class="form-select">
+          <option>Phòng 1 - IMAX</option>
+          <option>Phòng 2 - 4DX</option>
+          <option>Phòng 4 - 3D</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Ngày chiếu</label>
+        <input class="form-input" type="date" value="2026-02-27">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Giờ bắt đầu</label>
+        <input class="form-input" type="time" value="19:15">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Giá Standard</label>
+        <input class="form-input" type="number" value="90000">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Giá VIP</label>
+        <input class="form-input" type="number" value="150000">
+      </div>
+      <div class="form-group form-full">
+        <label class="form-label">Giá Sweetbox (đôi)</label>
+        <input class="form-input" type="number" value="250000">
+      </div>
+    </div>
+    <div style="background:rgba(67,97,238,.1);border:1px solid rgba(67,97,238,.2);
+                border-radius:8px;padding:12px;margin-top:12px;font-size:13px">
+      ✅ Không có xung đột phòng chiếu
+    </div>
+    <div class="form-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modalSchedule')">Hủy</button>
+      <button class="btn btn-primary"
+              onclick="showToast('Đã tạo suất chiếu!','success');closeModal('modalSchedule')">
+        💾 Lưu suất chiếu
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Review Modal -->
+<div class="modal-overlay" id="modalReview">
+  <div class="modal">
+    <div class="modal-title">
+      Viết đánh giá
+      <button class="modal-close" onclick="closeModal('modalReview')">✕</button>
+    </div>
+    <div class="form-group" style="margin-bottom:14px">
+      <label class="form-label">Chọn phim</label>
+      <select class="form-select">
+        <option>Avengers: Secret Wars</option>
+        <option>Biển Khát</option>
+        <option>Quỷ Nhập Tràng</option>
+      </select>
+    </div>
+    <div class="form-group" style="margin-bottom:14px">
+      <label class="form-label">Đánh giá</label>
+      <div style="display:flex;gap:8px;font-size:28px" id="starRating">
+        <span style="cursor:pointer" onclick="setStars(1)">☆</span>
+        <span style="cursor:pointer" onclick="setStars(2)">☆</span>
+        <span style="cursor:pointer" onclick="setStars(3)">☆</span>
+        <span style="cursor:pointer" onclick="setStars(4)">☆</span>
+        <span style="cursor:pointer" onclick="setStars(5)">☆</span>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Bình luận</label>
+      <textarea class="form-textarea" placeholder="Chia sẻ cảm nhận của bạn về bộ phim..."></textarea>
+    </div>
+    <div class="form-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modalReview')">Hủy</button>
+      <button class="btn btn-primary"   onclick="submitReview()">⭐ Gửi đánh giá</button>
+    </div>
+  </div>
+</div>
+
+<!-- User Modal -->
+<div class="modal-overlay" id="modalUser">
+  <div class="modal">
+    <div class="modal-title">
+      Thêm Nhân viên
+      <button class="modal-close" onclick="closeModal('modalUser')">✕</button>
+    </div>
+    <div class="form-grid">
+      <div class="form-group">
+        <label class="form-label">Họ tên</label>
+        <input class="form-input" id="newUserName" placeholder="Nguyễn Văn B">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email</label>
+        <input class="form-input" id="newUserEmail" placeholder="nhanvien@cinelux.vn">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Mật khẩu</label>
+        <input class="form-input" id="newUserPass" type="password" placeholder="••••••••">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Vai trò</label>
+        <select class="form-select" id="newUserRole">
+          <option>Staff</option>
+          <option>Admin</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modalUser')">Hủy</button>
+      <button class="btn btn-primary" onclick="saveNewUser()">
+        💾 Tạo tài khoản
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast Container -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- ── SCRIPTS ── -->
+<script src="js/api.js?v=3.5"></script>
+<script src="js/app.js?v=3.5"></script>
+<script src="js/movies.js?v=3.5"></script>
+<script src="js/booking.js?v=3.5"></script>
+<script src="js/pages.js?v=3.5"></script>
+<script src="js/render.js?v=3.5"></script>
+</body>
+</html>
