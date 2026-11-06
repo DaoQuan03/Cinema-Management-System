@@ -9,19 +9,45 @@ function renderFilmGrid() {
   if (!grid) return;
   grid.innerHTML = movies
     .filter(m => m.status === 'active' || m.status === 'upcoming')
-    .map(m => `
-      <div class="film-card" id="film-${m.id}" onclick="selectFilm(${m.id})">
-        <div class="film-poster">
-          <div class="film-poster-bg" style="--c1:${m.c1};--c2:${m.c2}"></div>
-          <div class="film-poster-emoji">${m.emoji}</div>
-          <div class="film-rating">★ ${m.rating}</div>
+    .map(m => {
+      const hasPoster = Boolean(m.poster_url);
+      const hasTrailer = Boolean(m.trailer_key);
+      const escapedTitle = (m.title || '').replace(/'/g, "\\'");
+      return `
+        <div class="film-card" id="film-${m.id}" onclick="selectFilm(${m.id})">
+          <div class="film-poster">
+            <div class="film-poster-bg" style="--c1:${m.c1};--c2:${m.c2}"></div>
+            ${hasPoster ? `<img src="${m.poster_url}" class="film-poster-img" alt="${m.title}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:inherit">` : `<div class="film-poster-emoji">${m.emoji}</div>`}
+            <div class="film-rating">★ ${m.rating}</div>
+            ${hasTrailer ? `<button type="button" class="film-trailer-btn" onclick="event.stopPropagation();playTrailer('${m.trailer_key}','${escapedTitle}')" title="Xem Trailer">▶ Trailer</button>` : ''}
+          </div>
+          <div class="film-info">
+            <div class="film-name">${m.title}</div>
+            <div class="film-meta">${m.genre} • ${m.duration} phút</div>
+          </div>
         </div>
-        <div class="film-info">
-          <div class="film-name">${m.title}</div>
-          <div class="film-meta">${m.genre} • ${m.duration} phút</div>
-        </div>
-      </div>
-    `).join('');
+      `;
+    }).join('');
+}
+
+function playTrailer(trailerKey, title) {
+  if (!trailerKey) {
+    showToast('Phim này chưa có trailer chính thức!', 'info');
+    return;
+  }
+  const modal = document.getElementById('modalTrailer');
+  const iframe = document.getElementById('trailerIframe');
+  const titleEl = document.getElementById('trailerTitle');
+  if (titleEl) titleEl.textContent = `🎬 Trailer: ${title || 'CinéLux'}`;
+  if (iframe) iframe.src = `https://www.youtube.com/embed/${trailerKey}?autoplay=1&rel=0`;
+  if (modal) modal.classList.add('open');
+}
+
+function closeTrailerModal() {
+  const modal = document.getElementById('modalTrailer');
+  const iframe = document.getElementById('trailerIframe');
+  if (iframe) iframe.src = '';
+  if (modal) modal.classList.remove('open');
 }
 
 function selectFilm(id) {

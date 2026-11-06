@@ -35,7 +35,7 @@ function renderDashboardData() {
         return `
           <tr>
             <td><div style="display:flex;align-items:center;gap:10px">
-              <div class="movie-thumb" style="background:linear-gradient(135deg,${m.c1 || '#1a0a2e'},${m.c2 || '#3d1f5e'})">${m.emoji || '🎬'}</div>
+              <div class="movie-thumb" style="background:linear-gradient(135deg,${m.c1 || '#1a0a2e'},${m.c2 || '#3d1f5e'});position:relative;overflow:hidden">${m.poster_url ? `<img src="${m.poster_url}" alt="${m.title}" style="width:100%;height:100%;object-fit:cover;border-radius:inherit">` : (m.emoji || '🎬')}</div>
               <div><div style="font-weight:600">${m.title}</div>
                    <div style="font-size:11px;color:var(--text-dim)">${m.genre} • ${m.duration}m</div></div>
             </div></td>
