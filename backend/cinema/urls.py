@@ -7,7 +7,8 @@ from .views import (
     TicketListCreateView, TicketCancelView, MyTicketsView,
     ReviewListCreateView,
     DashboardStatsView, RevenueReportView,
-    UserListCreateView
+    UserListCreateView,
+    TMDbSearchView, TMDbPopularView, TMDbDetailView, TMDbImportView
 )
 
 urlpatterns = [
@@ -42,4 +43,10 @@ urlpatterns = [
 
     # Users
     path('users/', UserListCreateView.as_view(), name='api-users'),
+
+    # TMDb World Movie Database
+    path('tmdb/search/', TMDbSearchView.as_view(), name='api-tmdb-search'),
+    path('tmdb/popular/', TMDbPopularView.as_view(), name='api-tmdb-popular'),
+    path('tmdb/movie/<int:tmdb_id>/', TMDbDetailView.as_view(), name='api-tmdb-detail'),
+    path('tmdb/import/', TMDbImportView.as_view(), name='api-tmdb-import'),
 ]

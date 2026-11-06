@@ -300,3 +300,94 @@ class UserListCreateView(APIView):
             role=role
         )
         return Response(UserSerializer(user).data, status=status.HTTP_201_CREATED)
+
+
+# ─── TMDB KHO PHIM THẾ GIỚI ──────────────────────────────
+from .tmdb import search_movies, get_popular_movies, get_movie_detail
+
+class TMDbSearchView(APIView):
+    def get(self, request):
+        query = request.query_params.get('q', '').strip()
+        if not query:
+            return Response([])
+        results = search_movies(query)
+        return Response(results)
+
+
+class TMDbPopularView(APIView):
+    def get(self, request):
+        results = get_popular_movies()
+        return Response(results)
+
+
+class TMDbDetailView(APIView):
+    def get(self, request, tmdb_id):
+        detail = get_movie_detail(tmdb_id)
+        if not detail:
+            return Response({'detail': 'Không tìm thấy phim trên TMDb.'}, status=status.HTTP_404_NOT_FOUND)
+        return Response(detail)
+
+
+class TMDbImportView(APIView):
+    def post(self, request):
+        tmdb_id = request.data.get('tmdb_id')
+        movie_status = request.data.get('status', 'active')
+        if not tmdb_id:
+            return Response({'detail': 'Thiếu tmdb_id.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        detail = get_movie_detail(tmdb_id)
+        if not detail:
+            return Response({'detail': 'Không thể lấy thông tin phim từ TMDb.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Kiểm tra xem phim đã có chưa
+        existing = Movie.objects.filter(tmdb_id=tmdb_id).first()
+        if not existing:
+            existing = Movie.objects.filter(title__iexact=detail['title']).first()
+
+        c1 = '#1a0a2e'
+        c2 = '#3d1f5e'
+        genre_lower = detail['genre'].lower()
+        if 'hành động' in genre_lower or 'action' in genre_lower:
+            c1, c2 = '#1a0a2e', '#3d1f5e'
+        elif 'kinh dị' in genre_lower or 'horror' in genre_lower:
+            c1, c2 = '#1a0a0a', '#3a1a1a'
+        elif 'hài' in genre_lower or 'comedy' in genre_lower:
+            c1, c2 = '#1a2e0a', '#3a5e1a'
+        elif 'lãng mạn' in genre_lower or 'romantic' in genre_lower:
+            c1, c2 = '#2e0a1a', '#5e1a3a'
+        elif 'khoa học' in genre_lower or 'sci-fi' in genre_lower:
+            c1, c2 = '#0a1a1a', '#1a3a3a'
+
+        if existing:
+            existing.title = detail['title']
+            existing.genre = detail['genre']
+            existing.duration = detail['duration']
+            existing.rating = detail['rating']
+            existing.start_date = detail['release_date'] or existing.start_date
+            existing.status = movie_status
+            existing.poster_url = detail['poster_url']
+            existing.backdrop_url = detail['backdrop_url']
+            existing.trailer_key = detail['trailer_key']
+            existing.tmdb_id = detail['tmdb_id']
+            existing.description = detail['overview']
+            existing.save()
+            return Response(MovieSerializer(existing).data, status=status.HTTP_200_OK)
+        else:
+            new_movie = Movie.objects.create(
+                title=detail['title'],
+                emoji='🎬',
+                genre=detail['genre'],
+                duration=detail['duration'],
+                rating=detail['rating'],
+                start_date=detail['release_date'] or timezone.now().strftime('%d/%m/%Y'),
+                status=movie_status,
+                c1=c1,
+                c2=c2,
+                description=detail['overview'],
+                poster_url=detail['poster_url'],
+                backdrop_url=detail['backdrop_url'],
+                trailer_key=detail['trailer_key'],
+                tmdb_id=detail['tmdb_id']
+            )
+            return Response(MovieSerializer(new_movie).data, status=status.HTTP_201_CREATED)
+
