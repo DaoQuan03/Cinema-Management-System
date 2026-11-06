@@ -48,6 +48,56 @@
   font-size:11px; font-weight:700;
   padding:3px 7px;
   border-radius:6px;
+  z-index:2;
+}
+
+.film-trailer-btn {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  background: rgba(0,0,0,.85);
+  backdrop-filter: blur(4px);
+  color: var(--gold);
+  border: 1px solid var(--gold);
+  border-radius: 20px;
+  padding: 3px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  transition: all .2s;
+  z-index: 3;
+}
+.film-trailer-btn:hover {
+  background: var(--gold);
+  color: #000;
+  transform: scale(1.05);
+}
+
+.tmdb-item {
+  display: flex;
+  gap: 12px;
+  padding: 10px;
+  cursor: pointer;
+  border-bottom: 1px solid var(--border);
+  transition: background .15s;
+  align-items: center;
+}
+.tmdb-item:hover {
+  background: rgba(201,168,76,.12);
+}
+.tmdb-item:last-child {
+  border-bottom: none;
+}
+.tmdb-item img {
+  width: 42px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
   display:flex; align-items:center; gap:3px;
 }
 .film-info { padding:12px; }

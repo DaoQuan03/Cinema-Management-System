@@ -163,5 +163,25 @@ const api = {
         body: JSON.stringify(data)
       });
     }
+  },
+
+  // ─── TMDB WORLD MOVIES ───
+  tmdb: {
+    async search(query) {
+      if (!query) return [];
+      return api.request(`/tmdb/search/?q=${encodeURIComponent(query)}`);
+    },
+    async getPopular() {
+      return api.request('/tmdb/popular/');
+    },
+    async getDetail(tmdbId) {
+      return api.request(`/tmdb/movie/${tmdbId}/`);
+    },
+    async importMovie(tmdbId, status = 'active') {
+      return api.request('/tmdb/import/', {
+        method: 'POST',
+        body: JSON.stringify({ tmdb_id: tmdbId, status })
+      });
+    }
   }
 };

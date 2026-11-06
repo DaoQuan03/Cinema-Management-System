@@ -187,66 +187,94 @@
 
 <!-- Movie Modal -->
 <div class="modal-overlay" id="modalMovie">
-  <div class="modal">
+  <div class="modal" style="max-width:680px">
     <div class="modal-title">
       Thêm / Sửa Phim
       <button class="modal-close" onclick="closeModal('modalMovie')">✕</button>
     </div>
+
+    <!-- TMDb Live Search Box -->
+    <div style="background:linear-gradient(135deg,rgba(201,168,76,.15),rgba(67,97,238,.1));border:1px solid rgba(201,168,76,.3);border-radius:var(--radius-md);padding:14px;margin-bottom:16px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+        <div style="font-size:13px;font-weight:700;color:var(--gold);display:flex;align-items:center;gap:6px">
+          🌐 TÌM KIẾM TỪ KHO PHIM THẾ GIỚI (TMDB)
+        </div>
+        <button type="button" class="btn btn-secondary btn-sm" style="font-size:11px;padding:3px 8px" onclick="openTmdbPopular()">
+          🔥 Phim Hot thịnh hành
+        </button>
+      </div>
+      <div style="position:relative">
+        <input type="text" id="tmdbSearchInput" class="form-input" placeholder="Nhập tên phim bất kỳ (VD: Avatar, Batman, Mai, Doraemon, Dune...)" oninput="onTmdbSearchInput(this.value)" autocomplete="off">
+        <div id="tmdbSuggestions" style="display:none;position:absolute;top:100%;left:0;right:0;max-height:260px;overflow-y:auto;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-md);box-shadow:0 10px 30px rgba(0,0,0,.7);z-index:99;margin-top:4px"></div>
+      </div>
+      <div style="font-size:11px;color:var(--text-muted);margin-top:6px">
+        💡 Chọn một phim trong kết quả, toàn bộ tên tiếng Việt, poster, thể loại, thời lượng và trailer sẽ được tự động điền ngay lập tức!
+      </div>
+    </div>
+
+    <input type="hidden" id="modalMovieEditId">
+    <input type="hidden" id="modalMovieTmdbId">
+
+    <div style="display:flex;gap:16px;margin-bottom:16px">
+      <div id="modalMoviePosterPreview" style="flex-shrink:0;width:70px;height:100px;background:var(--surface2);border:1px dashed var(--border);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:24px">
+        🎬
+      </div>
+      <div style="flex:1">
+        <div class="form-group" style="margin-bottom:10px">
+          <label class="form-label">Tên phim</label>
+          <input class="form-input" id="modalMovieTitle" placeholder="Tên phim...">
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+          <div class="form-group">
+            <label class="form-label">Thể loại</label>
+            <input class="form-input" id="modalMovieGenre" placeholder="Hành động, Phiêu lưu">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Thời lượng (phút)</label>
+            <input class="form-input" id="modalMovieDuration" type="number" placeholder="120">
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="form-grid">
-      <div class="form-group form-full">
-        <label class="form-label">Tên phim</label>
-        <input class="form-input" placeholder="Tên phim...">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Thể loại</label>
-        <select class="form-select">
-          <option>Action</option><option>Horror</option><option>Romantic</option>
-          <option>Thriller</option><option>Comedy</option><option>Sci-Fi</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Thời lượng (phút)</label>
-        <input class="form-input" placeholder="120" type="number">
-      </div>
       <div class="form-group">
         <label class="form-label">Ngày khởi chiếu</label>
-        <input class="form-input" type="date">
+        <input class="form-input" id="modalMovieStartDate" type="text" placeholder="20/02/2026 hoặc 2026-02-20">
       </div>
       <div class="form-group">
-        <label class="form-label">Ngày kết thúc</label>
-        <input class="form-input" type="date">
+        <label class="form-label">Điểm đánh giá (Rating)</label>
+        <input class="form-input" id="modalMovieRating" type="number" step="0.1" placeholder="8.5">
       </div>
       <div class="form-group form-full">
-        <label class="form-label">Nội dung phim</label>
-        <textarea class="form-textarea" placeholder="Mô tả nội dung..."></textarea>
+        <label class="form-label">Link Poster ảnh (TMDb / CDN)</label>
+        <input class="form-input" id="modalMoviePosterUrl" placeholder="https://image.tmdb.org/t/p/w500/..." onchange="document.getElementById('modalMoviePosterPreview').innerHTML = this.value ? `<img src='${this.value}' style='width:70px;height:100px;object-fit:cover;border-radius:6px'>` : '🎬'">
       </div>
-      <div class="form-group">
-        <label class="form-label">Đạo diễn</label>
-        <input class="form-input" placeholder="Tên đạo diễn">
+      <div class="form-group form-full">
+        <label class="form-label">YouTube Trailer Key</label>
+        <input class="form-input" id="modalMovieTrailerKey" placeholder="Mã YouTube trailer (VD: d9MyW72ELq0)">
       </div>
-      <div class="form-group">
-        <label class="form-label">Diễn viên chính</label>
-        <input class="form-input" placeholder="Tên diễn viên">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Rating</label>
-        <select class="form-select">
-          <option>P (Mọi lứa tuổi)</option>
-          <option>C13</option><option>C16</option><option>C18</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Ngôn ngữ</label>
-        <select class="form-select">
-          <option>Tiếng Việt (lồng tiếng)</option>
-          <option>Phụ đề Việt</option>
-          <option>Tiếng Anh</option>
-        </select>
+      <div class="form-group form-full">
+        <label class="form-label">Nội dung tóm tắt phim</label>
+        <textarea class="form-textarea" id="modalMovieDesc" placeholder="Mô tả nội dung phim..."></textarea>
       </div>
     </div>
     <div class="form-footer">
       <button class="btn btn-secondary" onclick="closeModal('modalMovie')">Hủy</button>
       <button class="btn btn-primary"   onclick="saveMovie()">💾 Lưu phim</button>
+    </div>
+  </div>
+</div>
+
+<!-- Trailer Modal -->
+<div class="modal-overlay" id="modalTrailer">
+  <div class="modal" style="max-width:760px;width:95%;padding:0;background:#000;overflow:hidden">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 18px;background:var(--surface)">
+      <div style="font-weight:700;font-size:15px;color:var(--gold)" id="trailerTitle">🎬 Trailer Phim</div>
+      <button class="modal-close" onclick="closeTrailerModal()">✕</button>
+    </div>
+    <div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden">
+      <iframe id="trailerIframe" style="position:absolute;top:0;left:0;width:100%;height:100%;border:none" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
     </div>
   </div>
 </div>
@@ -467,11 +495,11 @@
 <div class="toast-container" id="toastContainer"></div>
 
 <!-- ── SCRIPTS ── -->
-<script src="js/api.js?v=3.5"></script>
-<script src="js/app.js?v=3.5"></script>
-<script src="js/movies.js?v=3.5"></script>
-<script src="js/booking.js?v=3.5"></script>
-<script src="js/pages.js?v=3.5"></script>
-<script src="js/render.js?v=3.5"></script>
+<script src="js/api.js?v=3.6"></script>
+<script src="js/app.js?v=3.6"></script>
+<script src="js/movies.js?v=3.6"></script>
+<script src="js/booking.js?v=3.6"></script>
+<script src="js/pages.js?v=3.6"></script>
+<script src="js/render.js?v=3.6"></script>
 </body>
 </html>
