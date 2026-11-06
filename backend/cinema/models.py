@@ -57,6 +57,10 @@ class Movie(models.Model):
     c1 = models.CharField(max_length=30, default='#1a0a2e')
     c2 = models.CharField(max_length=30, default='#3d1f5e')
     description = models.TextField(blank=True, default='')
+    poster_url = models.URLField(max_length=500, blank=True, default='')
+    backdrop_url = models.URLField(max_length=500, blank=True, default='')
+    trailer_key = models.CharField(max_length=100, blank=True, default='')
+    tmdb_id = models.IntegerField(null=True, blank=True)
 
     def __str__(self):
         return self.title

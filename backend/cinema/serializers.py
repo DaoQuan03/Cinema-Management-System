@@ -17,7 +17,11 @@ class MovieSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Movie
-        fields = ['id', 'title', 'emoji', 'genre', 'duration', 'rating', 'start_date', 'startDate', 'status', 'c1', 'c2', 'description']
+        fields = [
+            'id', 'title', 'emoji', 'genre', 'duration', 'rating',
+            'start_date', 'startDate', 'status', 'c1', 'c2', 'description',
+            'poster_url', 'backdrop_url', 'trailer_key', 'tmdb_id'
+        ]
 
     def create(self, validated_data):
         if 'start_date' not in validated_data and 'startDate' in self.initial_data:
